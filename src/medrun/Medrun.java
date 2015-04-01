@@ -90,8 +90,6 @@ public class Medrun extends StateBasedGame {
      */
     public static void main(String[] args) throws SlickException, FileNotFoundException, IOException {
         
-        System.setProperty("java.library.path", "./lib/natives/macosx");
-        
         game = new Medrun("Medrun");
         app = new AppGameContainer(new ScalableGame(game, width, height, false));
         app.setDisplayMode(gameWidth, gameHeight, fullScreen);
