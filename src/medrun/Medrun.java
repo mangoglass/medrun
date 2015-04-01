@@ -71,6 +71,9 @@ public class Medrun extends StateBasedGame {
         this.addState(new MenuState(MENU));
         this.addState(new GameState(GAME));
         this.addState(new PauseState(PAUSE));
+        this.addState(new LeaderState(LEADERBOARDS));
+        this.addState(new SettingsState(SETTINGS));
+        this.addState(new AchieveState(ACHIEVEMENTS));
         Dimension display = Toolkit.getDefaultToolkit().getScreenSize(); //skapar ett display objekt där skärmens upplösning kan hämtas.   
         displayWidth = (int) display.getWidth();
         displayHeight = (int) display.getHeight();
@@ -117,6 +120,9 @@ public class Medrun extends StateBasedGame {
         this.getState(MENU).init(gc, this);
         this.getState(GAME).init(gc, this);
         this.getState(PAUSE).init(gc, this);
+        this.getState(LEADERBOARDS).init(gc, this);
+        this.getState(SETTINGS).init(gc, this);
+        this.getState(ACHIEVEMENTS).init(gc, this);
     }
 
     /**
