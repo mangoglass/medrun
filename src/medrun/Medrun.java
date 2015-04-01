@@ -83,14 +83,17 @@ public class Medrun extends StateBasedGame {
 
     /**
      *
+     * The Main class of the game Medrun. 
+     * 
+     * @author  Tom Axblad
+     * @version 1.0
+     * @since   2015-04-01  
      * @param args
      * @throws org.newdawn.slick.SlickException
      * @throws java.io.FileNotFoundException
      * @throws java.io.IOException
      */
     public static void main(String[] args) throws SlickException, FileNotFoundException, IOException {
-        
-        System.setProperty("java.library.path", "./lib/natives/macosx");
         
         game = new Medrun("Medrun");
         app = new AppGameContainer(new ScalableGame(game, width, height, false));
