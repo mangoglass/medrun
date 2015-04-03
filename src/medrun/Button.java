@@ -15,9 +15,9 @@ import org.newdawn.slick.TrueTypeFont;
  *
  * @author Admin
  */
-public class Button implements renderable {
+public class Button implements Renderable {
 
-    public static final int scale = 2;
+    public static final float scale = 1.5f;
     
     String title;
     Font font;
@@ -26,10 +26,10 @@ public class Button implements renderable {
     Image clicked;
     Image image;
     boolean click;
-    int x;
-    int y;
-    int width;
-    int height;
+    float x;
+    float y;
+    float width;
+    float height;
 
     /**
      *
@@ -46,7 +46,7 @@ public class Button implements renderable {
         width = unclicked.getWidth() * scale;
         height = unclicked.getHeight() * scale;
         image = unclicked;
-        font = new Font("Chicago", Font.BOLD, 25*scale);
+        font = new Font("Chicago", Font.BOLD, 25*(int)scale);
         buttonFont = new TrueTypeFont(font, true);
     }
 
@@ -93,8 +93,8 @@ public class Button implements renderable {
      */
     @Override
     public void render() {
-        Medrun.renderScaledCenter(image, x, y, scale);
-        Medrun.renderCenterdText(buttonFont, title, x, y, new Color(0,0,100));
+        Medrun.renderScaledCenter(image, (int)x, (int)y, scale);
+        Medrun.renderCenterdText(buttonFont, title, (int)x, (int)y, new Color(0,0,100));
     }
 
     /**
@@ -104,8 +104,8 @@ public class Button implements renderable {
      * @return
      */
     public boolean isInButton(float x, float y) {
-        int startX = this.x - width/2; // hämtar det x-värde som är längst till vänster.
-        int startY = this.y - height/2; // hämtar det y-värde som är längst upp.
+        float startX = this.x - width/2; // hämtar det x-värde som är längst till vänster.
+        float startY = this.y - height/2; // hämtar det y-värde som är längst upp.
         if (x > startX && x < startX + this.width && y > startY && y < startY + this.height) {
             return true;
         } else {
@@ -149,35 +149,35 @@ public class Button implements renderable {
      *
      * @return
      */
-    public int getX() {
+    public float getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(float x) {
         this.x = x;
     }
 
-    public int getY() {
+    public float getY() {
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(float y) {
         this.y = y;
     }
 
-    public int getWidth() {
+    public float getWidth() {
         return width;
     }
 
-    public void setWidth(int width) {
+    public void setWidth(float width) {
         this.width = width;
     }
 
-    public int getHeight() {
+    public float getHeight() {
         return height;
     }
 
-    public void setHeight(int height) {
+    public void setHeight(float height) {
         this.height = height;
     }
 

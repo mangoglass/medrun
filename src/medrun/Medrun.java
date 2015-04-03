@@ -32,8 +32,8 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class Medrun extends StateBasedGame {
 
-    public static final int width = 1920;
-    public static final int height = 1080;
+    public static final int width = 1920; // the games "width" rendering something at 1920 in the x-axis will put it to the farthest right.
+    public static final int height = 1080; // the games "height" rendering something at 1080 in the y-axis will put it to the lowest bottom.
 
     public static AppGameContainer app; // app = application
     public static AppGameContainer scalable; // to be able to scale the window.
@@ -59,6 +59,7 @@ public class Medrun extends StateBasedGame {
     public static int soundMaster;
     public static int soundEffects;
     public static int soundMusic;
+    public static MusicPlayer music;
 
     /**
      *
@@ -333,11 +334,11 @@ public class Medrun extends StateBasedGame {
         Medrun.difficulty = difficulty;
     }
 
-    public static void renderScaledCenter(Animation anim, int x, int y, int scale) {
+    public static void renderScaledCenter(Animation anim, int x, int y, float scale) {
         anim.draw(x - 20 - anim.getWidth() * scale / 2, y - anim.getHeight() * scale / 2, anim.getWidth() * scale, anim.getHeight() * scale);
     }
 
-    public static void renderScaledCenter(Image image, int x, int y, int scale) {
+    public static void renderScaledCenter(Image image, int x, int y, float scale) {
         image.draw(x - 20 - image.getWidth() * scale / 2, y - image.getHeight() * scale / 2, image.getWidth() * scale, image.getHeight() * scale);
     }
     
@@ -356,4 +357,39 @@ public class Medrun extends StateBasedGame {
     public static int getHeight() {
         return height;
     }
+
+    public static boolean isSoundMuted() {
+        return soundMuted;
+    }
+
+    public static void setSoundMuted(boolean soundMuted) {
+        Medrun.soundMuted = soundMuted;
+    }
+
+    public static int getSoundMaster() {
+        return soundMaster;
+    }
+
+    public static void setSoundMaster(int soundMaster) {
+        Medrun.soundMaster = soundMaster;
+        MusicPlayer.setMusicVolume();
+    }
+
+    public static int getSoundEffects() {
+        return soundEffects;
+    }
+
+    public static void setSoundEffects(int soundEffects) {
+        Medrun.soundEffects = soundEffects;
+    }
+
+    public static int getSoundMusic() {
+        return soundMusic;
+    }
+
+    public static void setSoundMusic(int soundMusic) {
+        Medrun.soundMusic = soundMusic;
+        MusicPlayer.setMusicVolume();
+    }
+    
 }

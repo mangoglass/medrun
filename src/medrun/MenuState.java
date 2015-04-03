@@ -22,6 +22,7 @@ class MenuState extends State {
     Button[] buttons;
     Image background;
     boolean mouseCheck;
+    public static final String menuMusicRef = "data/music/menumusic.aif";
 
     public MenuState(int stateID) {
         super(stateID);
@@ -30,6 +31,12 @@ class MenuState extends State {
     @Override
     public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
         System.out.println("Entered Menu State");
+        if (Medrun.music != null) {
+            if (!MusicPlayer.getRef().equals(menuMusicRef)) {
+                MusicPlayer.changeMusic(menuMusicRef);
+            }
+            Medrun.music.play();
+        }
     }
 
     @Override
@@ -40,11 +47,12 @@ class MenuState extends State {
     @Override
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
         mouseCheck = false;
-        background = new Image("data/sprites/background.png");
-        buttons = new Button[]{new Button("Start"), new Button("Leaderboards"), new Button("Achievements"),
-            new Button("Settings"), new Button("Exit")};
-        for(int i = 0; i < buttons.length; i++){
-            buttons[i].setY(Medrun.getHeight() / 5 + (75 * Button.scale * (i + 1)));
+        background = new Image("data/sprites/layers/layer0.png");
+        Medrun.music = new MusicPlayer(menuMusicRef);
+        buttons = new Button[]{new Button("Exit"), new Button("Settings"), new Button("Achievements"),
+            new Button("Leaderboards"), new Button("Start")};
+        for (int i = 0; i < buttons.length; i++) {
+            buttons[i].setY(Medrun.getHeight() - (buttons[i].getHeight() + 16)*(i+1));
         }
     }
 
@@ -59,28 +67,41 @@ class MenuState extends State {
     @Override
     public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
         input = gc.getInput();
-        if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+        if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) { // If the player is holding the left mouse button down.
             mouseCheck = true;
             for (Button button : buttons) {
-                if (button.isInButton(input.getMouseX(), input.getMouseY())) {
-                    if(!button.isClick()){
+                if (button.isInButton(input.getMouseX(), input.getMouseY())) { 
+                    if (!button.isClick()) {
                         button.togglePress();
                     }
-                } else if(button.isClick()){
+                } else if (button.isClick()) {
                     button.togglePress();
                 }
             }
-        } else if (mouseCheck){
+        } else if (mouseCheck) { // If the mouse have been clicked but we haven't checked whats been clicke yet.
             mouseCheck = false;
             for (Button button : buttons) {
-                if(button.isClick()){
+                if (button.isClick()) {
                     button.togglePress();
-                    switch (button.getTitle()){
-                        case "Start": sbg.enterState(Medrun.GAME);
-                        case "Leaderboards": 
+                    switch (button.getTitle()) {
+                        case "Start":
+                            MusicPlayer.stop();
+                            sbg.enterState(Medrun.GAME);
+                            break;
+                        case "Leaderboards":
+                            sbg.enterState(Medrun.LEADERBOARDS);
+                            break;
                         case "Achievements":
-                        case "Settings": 
-                        case "Exit": gc.exit();
+                            sbg.enterState(Medrun.ACHIEVEMENTS);
+                            break;
+                        case "Settings":
+                            sbg.enterState(Medrun.SETTINGS);
+                            break;
+                        case "Exit":
+                            gc.exit();
+                            break;
+                        default:
+                            gc.exit();
                     }
                 }
             }

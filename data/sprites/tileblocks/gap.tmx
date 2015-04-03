@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="9" height="17" tilewidth="32" tileheight="32" backgroundcolor="#595959" nextobjectid="1">
+ <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32">
+  <image source="../tileset.png" trans="ffffff" width="384" height="256"/>
+ </tileset>
+ <layer name="back" width="9" height="17">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgGL7AFYe4O5oaRzR5RxqrQcfoagi5eagBAEVjzxVkAgAA
+  </data>
+ </layer>
+ <layer name="glass" width="9" height="17" opacity="0.46">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgGAUgwAvEtkDMh0eNIRCrArEaHjWSQGwExFLUc9qQBwB0rIJNZAIAAA==
+  </data>
+ </layer>
+ <layer name="layer1" width="9" height="17">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC82RQQqAMAwE90+tqVXB/v9VtthgWBPPBoYesix0AgCpszlkPFM7CyHzzZQpTrZ99Az2uU9Bh5jMSbvi9GjucGj450R3sPcY/tQ7O1px/58dC94eoztYj9X0sm/tiRxb1xeosWqmZAIAAA==
+  </data>
+ </layer>
+ <layer name="collision" width="9" height="17" opacity="0.18">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgYGBgxINhAJmNC1BDDbq95KpBVofPX4MJ4HMvKW4fbGoAGv1SQWQCAAA=
+  </data>
+ </layer>
+</map>
