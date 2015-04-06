@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="27" tilewidth="32" tileheight="32" backgroundcolor="#595959" nextobjectid="1">
+ <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32">
+  <image source="../tileset.png" trans="ffffff" width="384" height="256"/>
+ </tileset>
+ <layer name="layer1" width="40" height="27">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgoB5gBmIuNMxCRfMpBZxAzIqGualovjcQB+HBPjR0nzEQW6FhEzQ3+RLAwTR0nz0Q26BhByAOJMJdyBhfWGJzHwgTmx5dgdgRit2hYjD38QKxLRrmQ5KDsWE4ggT3ERue+NwnCcRGaFgKSQ7GxhfPtHQfKXjUfZSlv4Fw32j6w+0+XPWCzyBxHy43BDMMjvRHjPsGMv0R477BHr+D3X2j6W80fkfjd+jG76j7Rt03EO4DAKHn9IfgEAAA
+  </data>
+ </layer>
+ <layer name="collision" width="40" height="27" opacity="0.3">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+2UMQ4AIAjE9P+fdnXRKIWEoSSOPQohjpFX8/C6VLXLaf7XXRA/2vu1Rzb7m3mb59YjuofMm6m4P/36ZOrXJ6siM5pV/S/vfbI5/RinH+P0Y5x+jNOPcfoxTj/GLVzzF8XgEAAA
+  </data>
+ </layer>
+</map>

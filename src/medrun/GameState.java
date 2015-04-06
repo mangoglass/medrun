@@ -21,7 +21,7 @@ class GameState extends State {
 
     public static final String gameMusicRef = "data/music/gamemusic.aif";
     public static final float startX = 600;
-    public static final float startY = 900;    
+    public static final float startY = 600;    
     
     public static int gametime;
     public static Player player;
@@ -29,9 +29,8 @@ class GameState extends State {
     public static float dyChange;
     public static float xChange;
     public static float yChange;
-    public static Block[] blocks;
     public static ArrayList<Layer> layers;
-    public static ArrayList<Block> activeBlocks; 
+    public static ArrayList<Block> blocks; 
     Input input;
     
     
@@ -46,7 +45,7 @@ class GameState extends State {
             if (!MusicPlayer.getRef().equals(gameMusicRef)) {
                 MusicPlayer.changeMusic(gameMusicRef);
             }
-            Medrun.music.play();
+            MusicPlayer.play();
         }
     }
 
@@ -57,17 +56,20 @@ class GameState extends State {
 
     @Override
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
-        layers = new ArrayList<Layer>();
-        activeBlocks = new ArrayList<Block>();
+        layers = new ArrayList<>();
+        blocks = new ArrayList<>();
+        blocks.add(new Block(Block.STARTBLOCK, (int)startX-40, (int)startY));
         for (int i = 0; i < 7; i++){
-            layers.add(new Layer(new Image("data/sprites/layers/layer"+i+".png"), i)); // 1 - (i/10) is the number that will multiply with the layers movement, higher the number, the more it will move.
+            layers.add(new Layer(new Image("data/sprites/layers/layer"+i+".png"), i)); // adding layers to the background.
         }
-        player = new Player(startX, startY);
+        
+        
+        player = new Player(startX, startY - Animations.height - 1);
         
         gametime = 0;
         
-        dxChange = 64;
-        dyChange = 0;
+        dxChange = 1; // CHANGE THIS LATER!
+        dyChange = 0; // CHANGE THIS LATER!
         
     }
 
@@ -77,19 +79,28 @@ class GameState extends State {
         layers.stream().forEach((layer) -> {
             layer.render();
         });
+        blocks.stream().forEach(block -> {
+            block.render();
+        });
+        player.render();
     }
 
     @Override
     public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
         input = gc.getInput();
         layers.stream().forEach((layer) -> {
-            layer.update(delta);
+            layer.update(delta); // The delta variable is the time in milliseconds between updates, it can be used to keep track of time and update positions properly.
         });
-        
+        for(int i = 0; i < blocks.size(); i++){
+            if(blocks.get(i).x + blocks.get(i).getWidth() < xChange){
+                blocks.remove(i);
+            }
+        }
         gametime += delta;
-        
-        xChange += dxChange*delta/24;
-        yChange += dyChange*delta/24;
+        xChange += dxChange*delta/24; // CHANGE THIS LATER!
+        yChange += dyChange*delta/24; // CHANGE THIS LATER!
+        player.update(delta, input);
+        System.out.println("player X: " + player.getX() + "   player Y: " + player.getY() + "player Xspeed: " + player.getxSpeed()+ "   player Yspeed:  " + player.getySpeed());
     }
 
     public static float getxChange() {
@@ -123,6 +134,8 @@ class GameState extends State {
     public static void setYdChange(float ydChange) {
         GameState.dyChange = ydChange;
     }
-    
-    
+
+    public static ArrayList<Block> getActiveBlocks() {
+        return blocks;
+    }
 }

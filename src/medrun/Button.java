@@ -18,7 +18,7 @@ import org.newdawn.slick.TrueTypeFont;
 public class Button implements Renderable {
 
     public static final float scale = 1.5f;
-    
+
     String title;
     Font font;
     TrueTypeFont buttonFont;
@@ -46,8 +46,11 @@ public class Button implements Renderable {
         width = unclicked.getWidth() * scale;
         height = unclicked.getHeight() * scale;
         image = unclicked;
-        font = new Font("Chicago", Font.BOLD, 25*(int)scale);
-        buttonFont = new TrueTypeFont(font, true);
+        try {
+            font = new Font("Chicago", Font.BOLD, 25 * (int) scale);
+            buttonFont = new TrueTypeFont(font, true);
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -89,12 +92,12 @@ public class Button implements Renderable {
     }
 
     /**
-     * 
+     *
      */
     @Override
     public void render() {
-        Medrun.renderScaledCenter(image, (int)x, (int)y, scale);
-        Medrun.renderCenterdText(buttonFont, title, (int)x, (int)y, new Color(0,0,100));
+        Medrun.renderScaledCenter(image, (int) x, (int) y, scale);
+        Medrun.renderCenterdText(buttonFont, title, (int) x, (int) y, new Color(0, 0, 100));
     }
 
     /**
@@ -104,8 +107,8 @@ public class Button implements Renderable {
      * @return
      */
     public boolean isInButton(float x, float y) {
-        float startX = this.x - width/2; // hämtar det x-värde som är längst till vänster.
-        float startY = this.y - height/2; // hämtar det y-värde som är längst upp.
+        float startX = this.x - width / 2; // hämtar det x-värde som är längst till vänster.
+        float startY = this.y - height / 2; // hämtar det y-värde som är längst upp.
         if (x > startX && x < startX + this.width && y > startY && y < startY + this.height) {
             return true;
         } else {

@@ -3,19 +3,14 @@
  <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32">
   <image source="../tileset.png" trans="ffffff" width="384" height="256"/>
  </tileset>
- <layer name="back" width="15" height="30">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC2NgGAVDHQhSoFcUiMWp5RAsQBeI9YlUR4ledHWjekf1juod1UusXgCxROLQCAcAAA==
-  </data>
- </layer>
  <layer name="layer1" width="15" height="30">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC2NgwA2YgZgLilnwqMMGOIGYFYq5R/XSTC8/EPNAsQCJegkBaSBWIgPLALE6EKuQgTWo7IdRMApGwSggBAA/2fU9CAcAAA==
+   H4sIAAAAAAAAC+3OSwqAMAwE0IAS69+NiL+Fev87OkIWXVihs7WBB4F2yIiEJ4PK5B//3qYEBwo1kS0Mk1W7zd5lO6vwnZ1wnXtozBCZfWaEKfC2wknY4ICdcHnZFrqI3c/OsETsfjZ1Tp1T539lb+hbeSIIBwAA
   </data>
  </layer>
  <layer name="collision" width="15" height="30" opacity="0.3">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC2NgwA0Y0TApgFT1o3rJ10tuHJFqNql4FIyCUTAKhgIAAJJtmUsIBwAA
+   H4sIAAAAAAAAC2NgwA0Y0TApgFT1o3rJ10tuHJFqNqmYEntH9Y7qHdU7qpdeegHJ10pnCAcAAA==
   </data>
  </layer>
 </map>
