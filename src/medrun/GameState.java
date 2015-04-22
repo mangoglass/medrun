@@ -6,6 +6,7 @@
 package medrun;
 
 import java.util.ArrayList;
+import java.util.Random;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -20,7 +21,7 @@ import org.newdawn.slick.state.StateBasedGame;
 class GameState extends State {
 
     public static final String gameMusicRef = "data/music/gamemusic.aif";
-    public static final float startX = 600;
+    public static final float startX = 1000;
     public static final float startY = 600;    
     
     public static int gametime;
@@ -29,8 +30,12 @@ class GameState extends State {
     public static float dyChange;
     public static float xChange;
     public static float yChange;
+    public static int latestBlockX;
+    public static int latestBlockWidth;
+    public static int latestBlockY;
     public static ArrayList<Layer> layers;
     public static ArrayList<Block> blocks; 
+    Random random;
     Input input;
     
     
@@ -58,7 +63,11 @@ class GameState extends State {
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
         layers = new ArrayList<>();
         blocks = new ArrayList<>();
-        blocks.add(new Block(Block.STARTBLOCK, (int)startX-40, (int)startY));
+        random = new Random();
+        latestBlockX = (int)startX-40;
+        latestBlockY = (int)startY;
+        blocks.add(new Block(Block.STARTBLOCK, latestBlockX, latestBlockY));
+        latestBlockWidth = blocks.get(blocks.size()-1).getWidth();
         for (int i = 0; i < 7; i++){
             layers.add(new Layer(new Image("data/sprites/layers/layer"+i+".png"), i)); // adding layers to the background.
         }
@@ -68,7 +77,7 @@ class GameState extends State {
         
         gametime = 0;
         
-        dxChange = 1; // CHANGE THIS LATER!
+        dxChange = 8; // CHANGE THIS LATER!
         dyChange = 0; // CHANGE THIS LATER!
         
     }
@@ -91,16 +100,26 @@ class GameState extends State {
         layers.stream().forEach((layer) -> {
             layer.update(delta); // The delta variable is the time in milliseconds between updates, it can be used to keep track of time and update positions properly.
         });
+        
+        if(latestBlockX + latestBlockWidth < xChange + Medrun.width){
+            latestBlockX += latestBlockWidth + random.nextInt((int) dxChange * 10) + 200; //differates between 300 and the current speed the game is moving with
+            latestBlockY += (random.nextInt((int) (100 + dxChange * 2)) - random.nextInt((int) (100 + dxChange * 2))); // differates between +- ten times the current moving speed adde to the last block.
+            int randBlockType = random.nextInt((int) (dxChange/2)); // decides what the next block shall be. CHANGE IF NECCECARY LATER!
+            blocks.add(new Block(randBlockType, latestBlockX, latestBlockY));
+            latestBlockWidth = blocks.get(blocks.size()-1).getWidth();
+        }
         for(int i = 0; i < blocks.size(); i++){
             if(blocks.get(i).x + blocks.get(i).getWidth() < xChange){
                 blocks.remove(i);
+                blocks.trimToSize();
             }
         }
         gametime += delta;
         xChange += dxChange*delta/24; // CHANGE THIS LATER!
         yChange += dyChange*delta/24; // CHANGE THIS LATER!
+        //System.out.println("xChange:   " + xChange + "   yChange:   " + yChange);
         player.update(delta, input);
-        System.out.println("player X: " + player.getX() + "   player Y: " + player.getY() + "player Xspeed: " + player.getxSpeed()+ "   player Yspeed:  " + player.getySpeed());
+        //System.out.println("player X: " + player.getX() + "   player Y: " + player.getY() + "   player Xspeed: " + player.getxSpeed()+ "   player Yspeed:  " + player.getySpeed());
     }
 
     public static float getxChange() {

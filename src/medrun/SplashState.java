@@ -32,6 +32,7 @@ public class SplashState extends State {
     @Override
     public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
         System.out.println("Entered splash state");
+        //sbg.enterState(Medrun.GAME);
     }
 
     @Override

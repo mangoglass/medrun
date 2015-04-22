@@ -14,6 +14,12 @@ import org.newdawn.slick.tiled.TiledMap;
  */
 public class Block implements Renderable {
 
+    public static final int X = 0;
+    public static final int Y = 1;
+    
+    public static final int tileWidth = 32;
+    public static final int tileHeight = 32;
+    
     public static final int STARTBLOCK = 0;
     public static final int REGULARCUBE = 1;
     public static final int SLIDEBLOCK = 2;
@@ -41,11 +47,11 @@ public class Block implements Renderable {
         } else if (type == LONGBLOCK) {
             tiledMap = new TiledMap("data/sprites/blocks/long.tmx");
         } else if (type == BIGBLOCK) {
-            tiledMap = new TiledMap("data/sprites/blocks/plain.tmx");
+            tiledMap = new TiledMap("data/sprites/blocks/regular.tmx");
         } else if (type == RANDOMBLOCK) {
-            tiledMap = new TiledMap("data/sprites/blocks/plain.tmx");
+            tiledMap = new TiledMap("data/sprites/blocks/regular.tmx");
         } else if (type == HARDBLOCK) {
-            tiledMap = new TiledMap("data/sprites/blocks/plain.tmx");
+            tiledMap = new TiledMap("data/sprites/blocks/regular.tmx");
         }
     }
 
@@ -75,33 +81,33 @@ public class Block implements Renderable {
     }
 
     public int getWidth() {
-        return tiledMap.getWidth() * tiledMap.getTileWidth();
+        return tiledMap.getWidth() * tileWidth;
     }
 
     public int getHeight() {
-        return tiledMap.getHeight() * tiledMap.getTileHeight();
+        return tiledMap.getHeight() * tileHeight;
     }
 
     public boolean inBlock(float[] pos) {
-        return (pos[0] > this.x && pos[0] < this.x + this.getWidth() && pos[1] > this.y && pos[1] < this.y + this.getHeight()); // pos[0] is the x value for the input, pos[1] is the y value. If all is true, you're in the block.
+        return (pos[X] > this.x && pos[X] < this.x + this.getWidth() && pos[Y] > this.y && pos[Y] < this.y + this.getHeight()); // pos[X] is the x value for the input, pos[Y] is the y value. If all is true, you're in the block.
     }
 
     public boolean isColliding(float[] pos) {
         int[] block = {
-            (int) ((pos[0] - (float) this.x - (pos[0] - (float) this.x) % (float) this.tiledMap.getTileWidth()) / (float) this.tiledMap.getTileWidth()),
-            (int) ((pos[1] - (float) this.y - (pos[1] - (float) this.y) % (float) this.tiledMap.getTileHeight()) / (float) this.tiledMap.getTileHeight())
+            (int) ((pos[X] - (float) this.x - (pos[X] - (float) this.x) % (float) tileWidth) / (float) tileWidth), // the input x position subtracted with the blocks x position subtracted with the distance to the nearest tiles x value, this becomes the x position of the nearest tile in pixels, lastly we divide by the pixel with of one tile
+            (int) ((pos[Y] - (float) this.y - (pos[Y] - (float) this.y) % (float) tileHeight) / (float) tileHeight) // the same as above, but with the y positions.
         };
-        if (block[0] < 0 || block[1] < 0) {
+        if (block[X] < 0 || block[X] > this.tiledMap.getWidth() - 1 || block[Y] < 0 || block[Y] > this.tiledMap.getHeight() - 1) {
             return false;
         } else {
-            return tiledMap.getTileId(block[0], block[1], this.tiledMap.getLayerIndex("collision")) == 1;
+            return tiledMap.getTileId(block[X], block[Y], this.tiledMap.getLayerIndex("collision")) == 1;
         }
     }
 
     public float[] getBlockPos(float[] pos) {
         return new float[]{
-            (pos[0] - (pos[0] - (float) this.x) % (float) this.tiledMap.getTileWidth()),
-            (pos[1] - (pos[1] - (float) this.y) % (float) this.tiledMap.getTileHeight())
+            (pos[X] - (pos[X] - (float) this.x) % (float) this.tiledMap.getTileWidth()),
+            (pos[Y] - (pos[Y] - (float) this.y) % (float) this.tiledMap.getTileHeight())
         };
     }
 }
