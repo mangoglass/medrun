@@ -5,11 +5,17 @@
  */
 package medrun;
 
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.io.File;
+import java.io.IOException;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
@@ -21,7 +27,10 @@ class MenuState extends State {
     Input input;
     Button[] buttons;
     Image background;
+    Font font;
+    TrueTypeFont trueType;
     boolean mouseCheck;
+    static final float fontSize = 200;
     public static final String menuMusicRef = "data/music/menumusic.aif";
 
     public MenuState(int stateID) {
@@ -54,6 +63,13 @@ class MenuState extends State {
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].setY(Medrun.getHeight() - (buttons[i].getHeight() + 16)*(i+1));
         }
+        try {
+            font = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, new File("data/fonts/ka.ttf"));
+            font = font.deriveFont(fontSize);
+            trueType = new TrueTypeFont(font, true);
+        } catch (FontFormatException | IOException e) {
+            System.out.println("Error in GUI.java on line 36-38");
+        }
     }
 
     @Override
@@ -62,6 +78,7 @@ class MenuState extends State {
         for (Button button : buttons) { // för alla button i arrayen buttons
             button.render(); // rendera button
         }
+        Medrun.renderCenterdText(trueType, "MEDRUN", Medrun.width/2, 200, new Color(Color.black));
     }
 
     @Override

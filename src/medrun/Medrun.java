@@ -55,7 +55,7 @@ public class Medrun extends StateBasedGame {
     public static int gameHeight;
     public static int targetFramerate;
     public static int minUpdateTime;
-    public static int difficulty;
+    public static float difficulty;
     public static int soundMaster;
     public static int soundEffects;
     public static int soundMusic;
@@ -105,7 +105,7 @@ public class Medrun extends StateBasedGame {
         app.setShowFPS(displayFPS);
         app.setTargetFrameRate(targetFramerate);
         app.setVSync(vSync);
-        app.setMinimumLogicUpdateInterval(minUpdateTime);
+        //app.setMinimumLogicUpdateInterval(minUpdateTime);
         app.start();
         game.enterState(SPLASH);
     }
@@ -182,7 +182,7 @@ public class Medrun extends StateBasedGame {
             } else if (line.startsWith("iMinimumLogicUpdateInterval")) {
                 minUpdateTime = Integer.parseInt(line.substring(line.indexOf("=") + 1).toLowerCase().trim());
             } else if (line.startsWith("iDifficulty")) {
-                difficulty = Integer.parseInt(line.substring(line.indexOf("=") + 1).toLowerCase().trim());
+                difficulty = 1 + (1 - (Integer.parseInt(line.substring(line.indexOf("=") + 1).toLowerCase().trim())))/2; // a 1 represents 1, a 2 represents 1.5, a 3 is 2, and so on.  
             } else if (line.startsWith("bSMute")) {
                 switch (line.substring(line.indexOf("=") + 1).toLowerCase().trim()) {
                     case "true":
@@ -326,7 +326,7 @@ public class Medrun extends StateBasedGame {
         app.setMinimumLogicUpdateInterval(minUpdateTime);
     }
 
-    public static int getDifficulty() {
+    public static float getDifficulty() {
         return difficulty;
     }
 

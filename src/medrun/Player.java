@@ -9,6 +9,8 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 /**
+ * The Player Class creates the player object which the person playing control's
+ * with chosen peripheral.
  *
  * @author Admin
  */
@@ -16,9 +18,15 @@ public class Player implements Renderable {
 
     public static final int X = 0;
     public static final int Y = 1;
-    public static final float jumpHeight = 22;
-    public static final float slowFall = 0.03f;
-    public static final float quickFall = 0.06f;
+    public static final int speedDiviator = 2;
+    public static final float jumpHeight = 15;
+    public static final float slowFall = 0.3f;
+    public static final float quickFall = 0.8f;
+    public static final float maxFallSpeed = 30;
+    public static final int maxIndentX = 2 * Block.tileWidth / 3;
+    public static final int maxIndentY = 2 * Block.tileHeight / 3;
+    public static final int xMargin = (int) Animations.width / 3;
+    public static final int yMargin = (int) Animations.height / 3;
 
     float x;
     float y;
@@ -26,10 +34,13 @@ public class Player implements Renderable {
     float ySpeed;
     float xAcc;
     float yacc;
-    float timeFlow;
     float jumpMultiplier;
+    float speedDif;
+    float deathScale; // how much the player will scale in size when dead.
     boolean onGround;
     boolean controlable;
+    boolean forwards;
+    boolean backwards;
     boolean sliding;
     boolean jumpButtonReleased;
     boolean slideButtonReleased;
@@ -47,48 +58,73 @@ public class Player implements Renderable {
         jumpPressTime = 0;
         slidePressTime = 0;
         slidePause = 0;
+        onGround = false;
         jumpButtonReleased = false;
         controlable = true;
         slideButtonReleased = false;
         dead = false;
         jumpMultiplier = 1;
-        timeFlow = 1;
-        xSpeed = GameState.dxChange;
+        speedDif = 0;
     }
 
-    public void update(int delta, Input input) {
+    public void update(int delta, float deltaRatio, Input input) {
+        xSpeed = GameState.dTranslatedX + speedDif;
         animations.update(delta, this);
 
         // Movement code starts here.
-        // xSpeed = GameState.dxChange; // Add this functionality later!
         if (input.isKeyDown(Input.KEY_SPACE) && controlable && onGround) { // If player is on the ground and is controlable
             onGround = false;
-            ySpeed = -jumpHeight * jumpMultiplier / timeFlow; // jump!
-        } else if (input.isKeyDown(Input.KEY_SPACE) && controlable && !onGround && !jumpButtonReleased && jumpPressTime < 10000) { // if the player is in the air, is holding down the jump button, hasn't released the jumpbutton, hasn't held it for over three seconds, and is controllable.
-            ySpeed += slowFall * delta / timeFlow; // fall slowly.
-            jumpPressTime += delta / timeFlow; // update the amount of time the player has held down the jump button.
-            System.out.println(jumpPressTime);
-        } else if (!onGround && ((!input.isKeyDown(Input.KEY_SPACE) && !jumpButtonReleased) || jumpPressTime > 10000 || !controlable)) { // if the player is in the air, has released the jump button (unregistrered), or has held the jumpbutton for more than three seconds, or isn't controllable.
+            ySpeed = -jumpHeight * jumpMultiplier / GameState.timeFlow; // jump!
+        } else if (input.isKeyDown(Input.KEY_SPACE) && controlable && !onGround && !jumpButtonReleased && ySpeed < 0) { // if the player is in the air, is holding down the jump button, hasn't released the jumpbutton, hasn't held it for over three seconds, and is controllable.       
+            ySpeed += slowFall * deltaRatio / GameState.timeFlow; // fall slowly.
+            jumpPressTime += deltaRatio / GameState.timeFlow; // update the amount of time the player has held down the jump button.
+        } else if (!onGround && !jumpButtonReleased && (!input.isKeyDown(Input.KEY_SPACE) || !controlable || ySpeed >= 0)) { // if the player is in the air, has released the jump button (unregistrered), or has held the jumpbutton for more than three seconds, or isn't controllable.
             jumpButtonReleased = true;
         } else if (jumpButtonReleased) { // if the player has released the jumpbutton, (or triggered any other event that makes this variable change to true).
-            ySpeed += quickFall * delta / timeFlow; // fall quickly.
+            if (ySpeed < maxFallSpeed) {
+                ySpeed += quickFall * deltaRatio / GameState.timeFlow; // fall quickly.
+            } else {
+                ySpeed = maxFallSpeed;
+            }
         }
 
-        if (input.isKeyDown(Input.KEY_Z) && controlable && onGround && !sliding) { // If the player is holding the slide button down and is on the ground.
+        if (input.isKeyDown(Input.KEY_S) && controlable && onGround && !sliding) { // If the player is holding the slide button down and is on the ground.
             sliding = true;
-        } else if (input.isKeyDown(Input.KEY_Z) && !slideButtonReleased && controlable && onGround && sliding) {
+        } else if (input.isKeyDown(Input.KEY_S) && !slideButtonReleased && controlable && onGround && sliding) {
             slidePressTime += delta;
-        } else if (sliding && ((!input.isKeyDown(Input.KEY_Z) && !slideButtonReleased) || slidePressTime > 1500 || !controlable || !onGround)) {
+        } else if (sliding && ((!input.isKeyDown(Input.KEY_S) && !slideButtonReleased) || slidePressTime > 1500 || !controlable || !onGround)) {
             slideButtonReleased = true;
             sliding = false;
         }
 
-        /*if (onGround && jumpButtonReleased) {
-            jumpButtonReleased = false;
-            ySpeed = 0;
-            jumpPressTime = 0;
-        }*/
-        
+        if (input.isKeyDown(Input.KEY_D) && !input.isKeyDown(Input.KEY_A) && controlable) {
+            if (!forwards) {
+                forwards = true;
+                backwards = false;
+            } else {
+                if (onGround) {
+                    speedDif = GameState.dTranslatedX / speedDiviator;
+                } else {
+                    speedDif = GameState.dTranslatedX / speedDiviator + 1;
+                }
+            }
+        } else if (input.isKeyDown(Input.KEY_A) && !input.isKeyDown(Input.KEY_D) && controlable) {
+            if (!backwards) {
+                backwards = true;
+                forwards = false;
+            } else {
+                if (onGround) {
+                    speedDif = -GameState.dTranslatedX / speedDiviator;
+                } else {
+                    speedDif = -GameState.dTranslatedX / speedDiviator + 1;
+                }
+            }
+        } else if (forwards || backwards) {
+            speedDif = 0;
+            forwards = false;
+            backwards = false;
+        }
+
         if (!sliding && slideButtonReleased && slidePause < 2000) {
             slidePause += delta;
         } else if (!sliding && slideButtonReleased && slidePause > 2000) {
@@ -102,21 +138,14 @@ public class Player implements Renderable {
                 System.out.println("Out of bounds!  character is under  the lower limit that is:  " + Medrun.height + " pixels");
                 dead = true;
             }
-            if (GameState.dxChange > 0) {
-                GameState.dxChange -= 0.2f;
-            } else if (GameState.dxChange != 0) {
-                GameState.dxChange = 0;
-            }
         }
 
         float[] oldPos = {x, y}; // the characters position in the last frame.
-        x += xSpeed * delta / 24; // update the x position for this frame! CHANGE THE VALUES LATER!
+        x += xSpeed * deltaRatio; // update the x position for this frame!
         y += ySpeed; // update the y position for this frame!
 
         // Collision code starts here
-        
         if (!dead) {
-            
             float[] vector = new float[]{x - oldPos[X], y - oldPos[Y]};
             float[] smallVector = vector.clone(); // smallVector is a clone of vector that will be smaller if the character has moved a large distance since the last drawn frame.
             while (Math.abs(smallVector[X]) > Block.tileWidth || Math.abs(smallVector[Y]) > Block.tileHeight) { // if our vector is bigger than the widht or height of one block
@@ -126,13 +155,15 @@ public class Player implements Renderable {
             float[] partialVector = smallVector.clone();
             foundCollision = false;
             while (Math.abs(partialVector[X]) <= Math.abs(vector[X]) && !foundCollision) { // while the partial vector is smaller than the 'real' vector and we haven't found any collisions, we will check all significant positions for collision from earliest to newest position.
-
                 float[] partialPos = {oldPos[X] + partialVector[X], oldPos[Y] + partialVector[Y]}; // the partial position is the actual position the player should be in.
-                float[] topLeftPos = partialPos.clone(); // the topLeft position is the same at the partial one, I use both to not create any confusions regarding the names.
-                float[] topRightPos = {oldPos[X] + partialVector[X] + Animations.width, oldPos[Y] + partialVector[Y]};
-                float[] botRightPos = {oldPos[X] + partialVector[X] + Animations.width, oldPos[Y] + partialVector[Y] + Animations.height};
-                float[] botLeftPos = {oldPos[X] + partialVector[X], oldPos[Y] + partialVector[Y] + Animations.height};
+                float[] topLeftPos = {oldPos[X] + partialVector[X] + xMargin, oldPos[Y] + partialVector[Y] + yMargin}; // the topLeft position is the same at the partial one, I use both to not create any confusions regarding the names.
+                float[] topRightPos = {oldPos[X] + partialVector[X] + Animations.width - xMargin, oldPos[Y] + partialVector[Y] + yMargin};
+                float[] botRightPos = {oldPos[X] + partialVector[X] + Animations.width - xMargin, oldPos[Y] + partialVector[Y] + Animations.height};
+                float[] botLeftPos = {oldPos[X] + partialVector[X] + xMargin, oldPos[Y] + partialVector[Y] + Animations.height};
                 for (Block block : GameState.getActiveBlocks()) { // for each block in the active block list.
+
+                    groundCheck(block, botLeftPos, botRightPos); // Checks if the player is running in the air.
+
                     if (block.inBlock(topLeftPos) || block.inBlock(topRightPos) || block.inBlock(botRightPos) || block.inBlock(botLeftPos)) { // If the character is in the block.
 
                         boolean topLeftcol = block.isColliding(topLeftPos);
@@ -141,67 +172,65 @@ public class Player implements Renderable {
                         boolean botLeftcol = block.isColliding(botLeftPos);
 
                         if (topLeftcol || topRightcol || botRightcol || botLeftcol) { // if the character colides with any colidible block in this position.
+
                             foundCollision = true; // we have found a collision! 
-                            if (topLeftcol && !botLeftcol) {
-                                if (topRightcol && !botRightcol) { // if the top left and right points have colided with a block / multiple blocks.
-                                    if (onGround) { // if we are on the ground.
-                                        die(partialPos); // you die, the player has probably hit a ceiling because said player stopped sliding while under an low obstacle.
-                                    } else { // if we are in air.
-                                        ySpeed = 0;
-                                        jumpButtonReleased = true;
-                                        setX(partialPos[X]); // change x position to the position of the partial vector.
-                                        setY(block.getBlockPos(topRightPos)[Y] + block.tiledMap.getTileHeight() + 1); // change y position to the position of the bottom of the block that we colided with.
-                                    }
-                                } else if (botRightcol && !topRightcol) { // if the top left and bottom right points have colided with a block / multiple blocks.
-                                    die(partialPos);
-                                } else if (botRightcol && topRightcol) { // if the top left, right and bottom right points have colided with a block / multiple blocks.
-                                    die(partialPos);
+
+                            //Single corner collisions
+                            if (topLeftcol && !topRightcol && !botRightcol && !botLeftcol) {
+                                if (onGround || !block.isBottomTile(topLeftPos)) {
+                                    die(partialPos, onGround);
+                                } else if (ySpeed < 0) {
+                                    setBelowRoof(partialPos, block);
                                 }
-                            } else if (botLeftcol && !topLeftcol) {
-                                if (topRightcol && !botRightcol) {
-                                    die(partialPos);
-                                } else if (botRightcol && !topRightcol) {
-                                    setOnGround();
-                                    setX(partialPos[X]);
-                                    setY(block.getBlockPos(botRightPos)[Y] - Animations.height - 1);
-                                } else if (botRightcol && topRightcol) {
-                                    die(partialPos);
+                            } else if (!topLeftcol && topRightcol && !botRightcol && !botLeftcol) {
+                                if (onGround || !block.isBottomTile(topRightPos)) {
+                                    die(partialPos, onGround);
+                                } else if (ySpeed < 0) {
+                                    setBelowRoof(topLeftPos, block);
+                                }
+                            } else if (!topLeftcol && !topRightcol && botRightcol && !botLeftcol) {
+                                if (ySpeed < 0) {
+                                    die(partialPos, onGround);
                                 } else {
-                                    //if(partialPos[X])
+                                    setOnGround(botRightPos, block, false);
                                 }
-                            } else if (topLeftcol && botLeftcol) {
-                                if (topRightcol && !botRightcol) {
-                                    ySpeed = 0;
-                                    jumpButtonReleased = true;
-                                    setX(partialPos[X]);
-                                    setY(block.getBlockPos(topRightPos)[Y] + block.tiledMap.getTileHeight() + 1); // change y position to the position of the bottom of the block that we colided with.
-                                } else if (botRightcol && !topRightcol) {
-                                    setOnGround();
-                                    setX(partialPos[X]);
-                                    setY(block.getBlockPos(botRightPos)[Y] - Animations.height - 1);
-                                } else if (botRightcol && topRightcol) {
-                                    die(partialPos);
+                            } else if (!topLeftcol && !topRightcol && !botRightcol && botLeftcol) {
+                                if (ySpeed >= 0) {
+                                    setOnGround(botRightPos, block, false);
                                 }
-                            } else {
-                                if (topRightcol && !botRightcol) {
-                                    float[] blocky = block.getBlockPos(topRightPos);
-                                    if (topRightPos[Y] - blocky[Y] >= 2 * block.getTiledHeight() / 3) { // If the distance between the character and the block is greater than two thirds, the character get's to live.
-                                        setX(partialPos[X]);
-                                        setY(blocky[Y] + block.tiledMap.getTileHeight() + 1);
-                                    } else {
-                                        die(partialPos);
-                                    }
-                                } else if (botRightcol && !topRightcol) {
-                                    float[] blocky = block.getBlockPos(botRightPos);
-                                    if (botRightPos[Y] - blocky[Y] <= block.getTiledHeight() / 3) {
-                                        setX(partialPos[X]);
-                                        setY(blocky[Y] + block.tiledMap.getTileHeight() + 1);
-                                    } else {
-                                        die(partialPos);
-                                    }
-                                } else if (botRightcol && topRightcol) {
-                                    die(partialPos);
+                            } //Double corner collisions
+                            else if (topLeftcol && topRightcol && !botRightcol && !botLeftcol) {
+                                if (onGround || !block.isBottomTile(topLeftPos)) { // if we are on the ground.
+                                    die(partialPos, onGround); // you die, the player has probably hit a ceiling because said player stopped sliding while under an low obstacle.
+                                } else if (ySpeed < 0) { // if we are in air. And are moving up
+                                    setBelowRoof(topLeftPos, block);
                                 }
+                            } else if (topLeftcol && !topRightcol && botRightcol && !botLeftcol) {
+                                die(partialPos, onGround);
+                            } else if (topLeftcol && !topRightcol && !botRightcol && botLeftcol) {
+                                // Nothing.
+                            } else if (!topLeftcol && topRightcol && botRightcol && !botLeftcol) {
+                                die(partialPos, onGround); // ran in to a wall.
+                            } else if (!topLeftcol && topRightcol && !botRightcol && botLeftcol) {
+                                die(partialPos, onGround);
+                            } else if (!topLeftcol && !topRightcol && botRightcol && botLeftcol) {
+                                if (ySpeed >= 0) {
+                                    setOnGround(botLeftPos, block, true);
+                                } else {
+                                    die(partialPos, onGround);
+                                }
+                            } //Tripple corner collisions
+                            else if (topLeftcol && topRightcol && botRightcol && !botLeftcol) {
+                                die(partialPos, onGround);
+                            } else if (topLeftcol && topRightcol && !botRightcol && botLeftcol) {
+                                setBelowRoof(topLeftPos, block);
+                            } else if (topLeftcol && !topRightcol && botRightcol && botLeftcol) {
+                                setOnGround(botLeftPos, block, true);
+                            } else if (!topLeftcol && topRightcol && botRightcol && botLeftcol) {
+                                die(partialPos, onGround);
+                            } //Four corner collision
+                            else {
+                                die(partialPos, onGround);
                             }
                         }
                         break; // break out of the position checking, since the character can only be in one block.
@@ -209,9 +238,20 @@ public class Player implements Renderable {
                 }
                 partialVector[X] += smallVector[X];
                 partialVector[Y] += smallVector[Y];
-            }
-            //break; // break out of the block checking if the character is in a block (the for loop). Unneccecary to check others as the character can only be in one at a time.
 
+                if (vector[X] == 0) {
+                    break;
+                }
+            }
+        }
+
+        if (dead) { // If the player is dead
+            if (!onGround) {
+                Animations.width *= deathScale;
+                Animations.height *= deathScale;
+            } else {
+                xSpeed *= 0.001f; //xSpeed is negative when you're dead, so this will lower the negative speed untill it almost reaches zero.
+            }
         }
     }
 
@@ -220,21 +260,66 @@ public class Player implements Renderable {
         animations.draw(x, y);
     }
 
-    public void die(float[] pos) {
+    public void die(float[] pos, boolean onGround) {
         setX(pos[X]);
         setY(pos[Y]);
+        xSpeed = (float) (-xSpeed / (1.5 + Math.random() / 2)); // the  negative xSpeed divided by a numer ranging between 1.5 and 2.
         controlable = false;
-        jumpButtonReleased = true;
         slideButtonReleased = true;
-        onGround = false;
         dead = true;
+        if (!onGround) {
+            jumpButtonReleased = true;
+            deathScale = 1 + (float) Math.random() / 25;
+        } else {
+            deathScale = 1;
+        }
     }
-    
-    public void setOnGround(){
+
+    public void setOnGround() {
         onGround = true;
         jumpButtonReleased = false;
         ySpeed = 0;
         jumpPressTime = 0;
+    }
+
+    public void setOnGround(float[] pos, Block block, boolean leftPos) {
+        if (leftPos) {
+            setX(pos[X] - xMargin);
+        } else {
+            setX(pos[X] + xMargin - Animations.width);
+        }
+
+        setY(block.getTilePixelPos(pos)[Y] - Animations.height - 1);
+        onGround = true;
+        jumpButtonReleased = false;
+        ySpeed = 0;
+        jumpPressTime = 0;
+    }
+
+    public void setBelowRoof(float[] pos, Block block) {
+        setX(pos[X] - xMargin); // change x position to the position of the partial vector.
+        setY(block.getTilePixelPos(pos)[Y] + block.tiledMap.getTileHeight() + 1); // change y position to the position of the bottom of the block that we colided with.
+        ySpeed = 0;
+        jumpButtonReleased = true;
+    }
+
+    /**
+     * Changes the players onGround variable to false (meaning the player is
+     * falling) if the blocks beneath the feet of the player isn't collidable.
+     *
+     * @param block the block that we should check in relation to the players
+     * position.
+     * @param botLeft the bottom left position of the player
+     * @param botRight the bottom right position of the player
+     */
+    public void groundCheck(Block block, float[] botLeft, float[] botRight) {
+        if (onGround && (block.inXRangeOfBlock(botLeft) || block.inXRangeOfBlock(botRight))) {
+            if (!block.isColliding(new float[]{botLeft[X], botLeft[Y] + block.getTiledHeight() / 2})
+                    && !block.isColliding(new float[]{botRight[X], botRight[Y] + block.getTiledHeight() / 2})) {
+
+                this.onGround = false;
+            }
+        }
     }
 
     public float getX() {
@@ -283,10 +368,6 @@ public class Player implements Renderable {
 
     public void setYacc(float yacc) {
         this.yacc = yacc;
-    }
-
-    public float getTimeFlow() {
-        return timeFlow;
     }
 
     public boolean isOnGround() {

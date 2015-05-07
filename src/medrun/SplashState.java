@@ -62,5 +62,4 @@ public class SplashState extends State {
     public static void renderScaledCenter(Animation anim, int x, int y, int scale){
         anim.draw(x - 20 - anim.getWidth()*scale/2, y - anim.getHeight()*scale/2, anim.getWidth()*scale, anim.getHeight()*scale);
     }
-    
 }

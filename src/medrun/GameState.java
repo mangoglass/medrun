@@ -21,15 +21,19 @@ import org.newdawn.slick.state.StateBasedGame;
 class GameState extends State {
 
     public static final String gameMusicRef = "data/music/gamemusic.aif";
-    public static final float startX = 1000;
+    public static final float startX = 500;
     public static final float startY = 600;    
     
     public static int gametime;
+    public static int frames;
     public static Player player;
-    public static float dxChange;
-    public static float dyChange;
-    public static float xChange;
-    public static float yChange;
+    public static Camera camera;
+    public static float dTranslatedX;
+    public static float dTranslatedY;
+    public static float translatedX;
+    public static float translatedY;
+    public static float deltaRatio;
+    public static float timeFlow;
     public static int latestBlockX;
     public static int latestBlockWidth;
     public static int latestBlockY;
@@ -37,6 +41,7 @@ class GameState extends State {
     public static ArrayList<Block> blocks; 
     Random random;
     Input input;
+    boolean restart;
     
     
     public GameState(int stateID) {
@@ -71,20 +76,24 @@ class GameState extends State {
         for (int i = 0; i < 7; i++){
             layers.add(new Layer(new Image("data/sprites/layers/layer"+i+".png"), i)); // adding layers to the background.
         }
-        
-        
-        player = new Player(startX, startY - Animations.height - 1);
-        
+        player = new Player(startX, startY - Animations.startHeight - 1);
+        camera = new Camera();
         gametime = 0;
-        
-        dxChange = 8; // CHANGE THIS LATER!
-        dyChange = 0; // CHANGE THIS LATER!
-        
+        frames = 0;
+        translatedX = 0;
+        translatedY = 0;
+        dTranslatedX = 0;
+        dTranslatedY = 0;
+        timeFlow = 1;
+        restart = false;
+        if(Medrun.music != null){
+            MusicPlayer.restart();
+        }
     }
 
     @Override
     public void render(GameContainer gc, StateBasedGame sbg, Graphics grphcs) throws SlickException {
-        grphcs.translate(-xChange, -yChange);
+        grphcs.translate(-translatedX, -translatedY);
         layers.stream().forEach((layer) -> {
             layer.render();
         });
@@ -97,64 +106,80 @@ class GameState extends State {
     @Override
     public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
         input = gc.getInput();
+        gametime += delta;
+        frames ++;
+        deltaRatio = ((float)(delta)) / (gametime/frames); // I devide the total gametime with the number of frames because that is the average time between frames in miliseconds.
+        //System.out.println("delta Ratio: " + deltaRatio);
         layers.stream().forEach((layer) -> {
-            layer.update(delta); // The delta variable is the time in milliseconds between updates, it can be used to keep track of time and update positions properly.
+            layer.update(deltaRatio); // The delta variable is the time in milliseconds between updates, it can be used to keep track of time and update positions properly.
         });
         
-        if(latestBlockX + latestBlockWidth < xChange + Medrun.width){
-            latestBlockX += latestBlockWidth + random.nextInt((int) dxChange * 10) + 200; //differates between 300 and the current speed the game is moving with
-            latestBlockY += (random.nextInt((int) (100 + dxChange * 2)) - random.nextInt((int) (100 + dxChange * 2))); // differates between +- ten times the current moving speed adde to the last block.
-            int randBlockType = random.nextInt((int) (dxChange/2)); // decides what the next block shall be. CHANGE IF NECCECARY LATER!
+        if(latestBlockX + latestBlockWidth < translatedX + Medrun.width){ // if the latest block's right side is in the picture, we generate a new block.
+            latestBlockX += latestBlockWidth + random.nextInt((int) (dTranslatedX + 1)) + 200; //differates between 300 and the current speed the game is moving with
+            latestBlockY += (random.nextInt((int) (100 + dTranslatedX*20)) - random.nextInt((int) (100 + dTranslatedX*20))); // differates between +- ten times the current moving speed adde to the last block.
+            int randBlockType = random.nextInt((int) (dTranslatedX/10) + 3) + 1; // decides what the next block shall be. CHANGE IF NECCECARY LATER!
             blocks.add(new Block(randBlockType, latestBlockX, latestBlockY));
+            //System.out.println("(added) number of active blocks is now: " + blocks.size());
             latestBlockWidth = blocks.get(blocks.size()-1).getWidth();
         }
         for(int i = 0; i < blocks.size(); i++){
-            if(blocks.get(i).x + blocks.get(i).getWidth() < xChange){
+            if(blocks.get(i).x + blocks.get(i).getWidth() < translatedX){
                 blocks.remove(i);
                 blocks.trimToSize();
+                //System.out.println("(removed) number of active blocks is now: " + blocks.size());
             }
         }
-        gametime += delta;
-        xChange += dxChange*delta/24; // CHANGE THIS LATER!
-        yChange += dyChange*delta/24; // CHANGE THIS LATER!
+        
+        translatedX += dTranslatedX * deltaRatio; 
+        translatedY += dTranslatedY * deltaRatio; 
         //System.out.println("xChange:   " + xChange + "   yChange:   " + yChange);
-        player.update(delta, input);
+        player.update(delta, deltaRatio, input);
+        camera.update(gametime, deltaRatio, player);
         //System.out.println("player X: " + player.getX() + "   player Y: " + player.getY() + "   player Xspeed: " + player.getxSpeed()+ "   player Yspeed:  " + player.getySpeed());
+    
+        if(input.isKeyPressed(Input.KEY_R) && !restart){
+            restart = true;
+            sbg.getCurrentState().init(gc, sbg);
+        }
     }
 
     public static float getxChange() {
-        return xChange;
+        return translatedX;
     }
 
     public static void setxChange(float xChange) {
-        GameState.xChange = xChange;
+        GameState.translatedX = xChange;
     }
 
     public static float getyChange() {
-        return yChange;
+        return translatedY;
     }
 
     public static void setyChange(float yChange) {
-        GameState.yChange = yChange;
+        GameState.translatedY = yChange;
     }
 
     public static float getXdChange() {
-        return dxChange;
+        return dTranslatedX;
     }
 
     public static void setXdChange(float xdChange) {
-        GameState.dxChange = xdChange;
+        GameState.dTranslatedX = xdChange;
     }
 
     public static float getYdChange() {
-        return dyChange;
+        return dTranslatedY;
     }
 
     public static void setYdChange(float ydChange) {
-        GameState.dyChange = ydChange;
+        GameState.dTranslatedY = ydChange;
     }
 
     public static ArrayList<Block> getActiveBlocks() {
         return blocks;
+    }
+    
+     public float getTimeFlow() {
+        return timeFlow;
     }
 }

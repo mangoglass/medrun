@@ -6,6 +6,7 @@
 package medrun;
 
 import java.awt.Font;
+import java.io.File;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -18,7 +19,8 @@ import org.newdawn.slick.TrueTypeFont;
 public class Button implements Renderable {
 
     public static final float scale = 1.5f;
-
+    static final float fontSize = 26;
+    
     String title;
     Font font;
     TrueTypeFont buttonFont;
@@ -47,8 +49,11 @@ public class Button implements Renderable {
         height = unclicked.getHeight() * scale;
         image = unclicked;
         try {
-            font = new Font("Chicago", Font.BOLD, 25 * (int) scale);
-            buttonFont = new TrueTypeFont(font, true);
+            font = Font.createFont(Font.TRUETYPE_FONT, new File("data/fonts/retro.ttf"));
+            font = font.deriveFont(fontSize);
+            //System.out.println(font.getSize());
+            //font = new Font("Chicago", Font.BOLD, 25 * (int) scale);
+            buttonFont = new TrueTypeFont(font, false);
         } catch (Exception e) {
         }
     }
@@ -97,7 +102,7 @@ public class Button implements Renderable {
     @Override
     public void render() {
         Medrun.renderScaledCenter(image, (int) x, (int) y, scale);
-        Medrun.renderCenterdText(buttonFont, title, (int) x, (int) y, new Color(0, 0, 100));
+        Medrun.renderCenterdText(buttonFont, title, (int) x, (int) y, new Color(Color.black));
     }
 
     /**

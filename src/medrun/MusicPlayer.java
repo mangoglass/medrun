@@ -75,4 +75,8 @@ public class MusicPlayer {
     public static void setMusicVolume() {
         MusicPlayer.setVolume(((float) soundMaster * (float) soundMusic / 100) / 100);
     }
+    
+    public static void restart(){
+        music.setPosition(0);
+    }
 }

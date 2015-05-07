@@ -36,17 +36,26 @@ public class Animations {
 
     public static final int FAST = 30; // Fast animation speed, mesured in miliseconds per frame.
     public static final int SLOW = 100; // Slow animation speed.
-    public static final int NORMAL = 75; // Normal animation speed.
+    public static final int NORMAL = 70; // Normal animation speed.
 
-    public static final int width = 100;
-    public static final int height = 100;
-    public static final float airSwitcher = 10; // How small the yspeed value of the player needs to be to trigger the inair switch event.
+    public static final int startWidth = 100;
+    public static final int startHeight = 100;
+    public static final int speedChanger = 15;
+    public static int width;
+    public static int height;
+    
+    public static final float airSpeedSwitch = 10; // How small the yspeed value of the player needs to be to trigger the inair switch event.
     public SpriteSheet sprites;
     public Animation[] animations;
     public Animation current;
-
+    
+    boolean fasterRun = false;
+    boolean slowerRun = false;
+    
     public Animations() throws SlickException {
         sprites = new SpriteSheet("data/sprites/player.png", 70, 70, Color.green);
+        width = startWidth;
+        height = startHeight;
         animations = new Animation[]{
             new Animation(sprites, 0, 0, 7, 0, true, NORMAL, false),
             new Animation(sprites, 0, 1, 7, 1, true, NORMAL, false),
@@ -72,6 +81,7 @@ public class Animations {
                 case JUMP:
                 case LAND:
                 case POINT:
+                case CRASH:
                 case SLIDESTART:
                 case SLIDESTOP:
                 case VICTORY:
@@ -79,56 +89,112 @@ public class Animations {
                     break;
             }
         }
-        current = animations[1];
-        current.setLooping(true);
+        current = animations[POINT];
+        current.setLooping(false);
         current.setAutoUpdate(false);
     }
 
     public void update(int delta, Player player) {
 
         float ySpeed = player.getySpeed(); // to reduce code size.
+        
+        if (player.dead && !player.onGround && isNotAnimation(SPIN)) {
+            changeAnimation(SPIN);
+        } else if(player.dead && player.onGround && isNotAnimation(CRASH)){
+            changeAnimation(CRASH);
+        }else if (!player.dead) {
+            if (ySpeed < -airSpeedSwitch && isNotAnimation(INAIRUP)) {
+                changeAnimation(INAIRUP);
+            } else if (ySpeed > -airSpeedSwitch && ySpeed < airSpeedSwitch && !player.isOnGround()) {
+                float fourth = airSpeedSwitch / 4;
+                if (isNotAnimation(INAIRSHIWTCH)) {
+                    changeAnimation(INAIRSHIWTCH);
+                }
+                if (ySpeed < -airSpeedSwitch + fourth && current.getFrame() != 0) { 
+                    current.setCurrentFrame(0);
+                } else if (ySpeed > -airSpeedSwitch + fourth && ySpeed < -airSpeedSwitch + 2 * fourth && current.getFrame() != 1) {
+                    current.setCurrentFrame(1);
+                } else if (ySpeed > -airSpeedSwitch + 2 * fourth && ySpeed < -airSpeedSwitch + 3 * fourth && current.getFrame() != 2) {
+                    current.setCurrentFrame(2);
+                } else if (ySpeed > -airSpeedSwitch + 3 * fourth && ySpeed < airSpeedSwitch - 3 * fourth && current.getFrame() != 3) {
+                    current.setCurrentFrame(3);
+                } else if (ySpeed > airSpeedSwitch - 3 * fourth && ySpeed < airSpeedSwitch - 2 * fourth && current.getFrame() != 4) {
+                    current.setCurrentFrame(4);
+                } else if (ySpeed > airSpeedSwitch - 2 * fourth && ySpeed < airSpeedSwitch - fourth && current.getFrame() != 5) {
+                    current.setCurrentFrame(5);
+                } else if (ySpeed > airSpeedSwitch - fourth && current.getFrame() != 6) {
+                    current.setCurrentFrame(6);
+                }
 
-        if (ySpeed < -airSwitcher && current != animations[INAIRUP]) {
-            current = animations[INAIRUP];
-        } else if (ySpeed > -airSwitcher && ySpeed < airSwitcher && !player.isOnGround()) {
-            float fourth = airSwitcher / 4;
-            if (current != animations[INAIRSHIWTCH]) {
-                current = animations[INAIRSHIWTCH];
+            } else if (ySpeed > airSpeedSwitch && isNotAnimation(INAIRDOWN)) {
+                changeAnimation(INAIRDOWN);
+            } else if (player.isOnGround() && isAnimation(INAIRDOWN)) {
+                changeAnimation(LAND);
+                current.restart();
+            } else if (player.isOnGround() && isAnimation(LAND) && current.isStopped()) {
+                changeAnimation(RUN);
             }
-            if (ySpeed < -airSwitcher + fourth && current.getFrame() != 0) {
-                current.setCurrentFrame(0);
-            } else if (ySpeed > -airSwitcher + fourth && ySpeed < -airSwitcher + 2 * fourth && current.getFrame() != 1) {
-                current.setCurrentFrame(1);
-            } else if (ySpeed > -airSwitcher + 2 * fourth && ySpeed < -airSwitcher + 3 * fourth && current.getFrame() != 2) {
-                current.setCurrentFrame(2);
-            } else if (ySpeed > -airSwitcher + 3 * fourth && ySpeed < airSwitcher - 3 * fourth && current.getFrame() != 3) {
-                current.setCurrentFrame(3);
-            } else if (ySpeed > airSwitcher - 3 * fourth && ySpeed < airSwitcher - 2 * fourth && current.getFrame() != 4) {
-                current.setCurrentFrame(4);
-            } else if (ySpeed > airSwitcher - 2 * fourth && ySpeed < airSwitcher - fourth && current.getFrame() != 5) {
-                current.setCurrentFrame(5);
-            } else if (ySpeed > airSwitcher - fourth && current.getFrame() != 6) {
-                current.setCurrentFrame(6);
+            
+            if(isAnimation(RUN)){
+                if(player.forwards && !fasterRun){
+                    fasterRun = true;
+                    slowerRun = false;
+                    changeDuration(NORMAL - speedChanger);
+                    System.out.println("aaaa");
+                } else if(player.backwards && !slowerRun){
+                    slowerRun = true;
+                    fasterRun = false;
+                    changeDuration(NORMAL + speedChanger);
+                } else if(!player.backwards && !player.forwards && (fasterRun || slowerRun)){
+                    fasterRun = false;
+                    slowerRun = false;
+                    defaultSpeed();
+                }
             }
-
-        } else if (ySpeed > airSwitcher && current != animations[INAIRDOWN]) {
-            current = animations[INAIRDOWN];
-        } else if (player.isOnGround() && current == animations[INAIRDOWN]) {
-            current = animations[LAND];
-            current.restart();
-        } else if (player.isOnGround() && current == animations[LAND] && current.isStopped()) {
-            current = animations[RUN];
+            
         }
 
         current.update(delta);
     }
 
     public void draw(float x, float y) {
+        
         current.draw(x, y, width, height);
     }
 
     public Animation[] getAnimations() {
         return animations;
+    }
+    
+    public void changeAnimation(int animation){
+        current = animations[animation];
+        if(GameState.timeFlow != 1){
+            defaultSpeed();
+        }
+    }
+    
+    public void changeDuration(float duration){
+        if(GameState.timeFlow != 1){
+            current.setSpeed((current.getDuration(0) * GameState.timeFlow) / duration);
+        } else{
+            current.setSpeed(current.getDuration(0) / duration);
+        }
+    }
+    
+    public void defaultSpeed(){
+        if(GameState.timeFlow != 1){
+            current.setSpeed(current.getDuration(0) / (current.getDuration(0) * GameState.timeFlow));
+        } else{
+            current.setSpeed(1);
+        }
+    }
+    
+     public boolean isAnimation(int animation){
+        return current == animations[animation];
+    }
+     
+    public boolean isNotAnimation(int animation){
+        return current != animations[animation];
     }
 
     public void setAnimations(Animation[] animations) {
