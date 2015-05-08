@@ -61,9 +61,9 @@ public class Animations {
             new Animation(sprites, 0, 1, 7, 1, true, NORMAL, false),
             new Animation(sprites, 0, 2, 7, 2, true, NORMAL, false),
             new Animation(sprites, 0, 3, 4, 5, true, FAST, false),
-            new Animation(sprites, 0, 6, 1, 6, true, FAST, false),
-            new Animation(sprites, 0, 7, 3, 7, true, SLOW, false),
-            new Animation(sprites, 0, 8, 2, 8, true, FAST, false),
+            new Animation(sprites, 0, 6, 1, 6, true, NORMAL, false),
+            new Animation(sprites, 0, 7, 3, 7, true, NORMAL, false),
+            new Animation(sprites, 0, 8, 2, 8, true, NORMAL, false),
             new Animation(sprites, 0, 9, 3, 11, true, NORMAL, false),
             new Animation(sprites, 0, 12, 7, 12, true, SLOW, false),
             new Animation(sprites, 0, 13, 4, 13, true, FAST, false),
@@ -132,6 +132,16 @@ public class Animations {
                 changeAnimation(LAND);
                 current.restart();
             } else if (player.isOnGround() && isAnimation(LAND) && current.isStopped()) {
+                changeAnimation(RUN);
+            }
+            
+            if( player.isSliding() && isAnimation(RUN)){
+                changeAnimation(SLIDESTART);
+            } else if(player.isSliding() && isAnimation(SLIDESTART) && current.isStopped()){
+                changeAnimation(SLIDE);
+            } else if(player.isOnGround() && !player.isSliding() && isAnimation(SLIDE)){
+                changeAnimation(SLIDESTOP);
+            } else if(player.isOnGround() && !player.isSliding() && isAnimation(SLIDESTOP) && current.isStopped()){
                 changeAnimation(RUN);
             }
             

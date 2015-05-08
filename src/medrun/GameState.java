@@ -28,6 +28,7 @@ class GameState extends State {
     public static int frames;
     public static Player player;
     public static Camera camera;
+    public static Gui gui;
     public static float dTranslatedX;
     public static float dTranslatedY;
     public static float translatedX;
@@ -78,6 +79,7 @@ class GameState extends State {
         }
         player = new Player(startX, startY - Animations.startHeight - 1);
         camera = new Camera();
+        gui = new Gui();
         gametime = 0;
         frames = 0;
         translatedX = 0;
@@ -100,6 +102,7 @@ class GameState extends State {
         blocks.stream().forEach(block -> {
             block.render();
         });
+        gui.render();
         player.render();
     }
 
@@ -115,8 +118,12 @@ class GameState extends State {
         });
         
         if(latestBlockX + latestBlockWidth < translatedX + Medrun.width){ // if the latest block's right side is in the picture, we generate a new block.
-            latestBlockX += latestBlockWidth + random.nextInt((int) (dTranslatedX + 1)) + 200; //differates between 300 and the current speed the game is moving with
-            latestBlockY += (random.nextInt((int) (100 + dTranslatedX*20)) - random.nextInt((int) (100 + dTranslatedX*20))); // differates between +- ten times the current moving speed adde to the last block.
+            latestBlockX += latestBlockWidth + random.nextInt((int) (1 + dTranslatedX*20)) + 200; //differates between 200 and ten times the current speed the game is moving with
+            if(latestBlockY < 500){
+                latestBlockY += (random.nextInt((int) (300 + dTranslatedX*15)) - random.nextInt((int) (300 + dTranslatedX*15))); // differates between +- ten times the current moving speed added to the last block.
+            } else{
+                latestBlockY -= random.nextInt((int) (200 + dTranslatedX*15)); // differates between - ten times the current moving speed added to the last block.
+            }
             int randBlockType = random.nextInt((int) (dTranslatedX/10) + 3) + 1; // decides what the next block shall be. CHANGE IF NECCECARY LATER!
             blocks.add(new Block(randBlockType, latestBlockX, latestBlockY));
             //System.out.println("(added) number of active blocks is now: " + blocks.size());
@@ -135,6 +142,7 @@ class GameState extends State {
         //System.out.println("xChange:   " + xChange + "   yChange:   " + yChange);
         player.update(delta, deltaRatio, input);
         camera.update(gametime, deltaRatio, player);
+        gui.update(player.xSpeed);
         //System.out.println("player X: " + player.getX() + "   player Y: " + player.getY() + "   player Xspeed: " + player.getxSpeed()+ "   player Yspeed:  " + player.getySpeed());
     
         if(input.isKeyPressed(Input.KEY_R) && !restart){
