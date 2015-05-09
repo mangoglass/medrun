@@ -35,14 +35,15 @@ class GameState extends State {
     public static float translatedY;
     public static float deltaRatio;
     public static float timeFlow;
+    public static float musicPos;
     public static int latestBlockX;
     public static int latestBlockWidth;
     public static int latestBlockY;
     public static ArrayList<Layer> layers;
-    public static ArrayList<Block> blocks; 
+    public static ArrayList<Block> blocks;
+    public static boolean restarted = false;
     Random random;
     Input input;
-    boolean restart;
     
     
     public GameState(int stateID) {
@@ -55,8 +56,15 @@ class GameState extends State {
         if (Medrun.music != null) {
             if (!MusicPlayer.getRef().equals(gameMusicRef)) {
                 MusicPlayer.changeMusic(gameMusicRef);
+                MusicPlayer.getMusic().setPosition(musicPos);
+                MusicPlayer.play();
+            } else if(!MusicPlayer.getMusic().playing() && !restarted){
+                MusicPlayer.getMusic().resume();
+            } else if(restarted){
+                MusicPlayer.restart();
+                MusicPlayer.play();
+                restarted = false;
             }
-            MusicPlayer.play();
         }
     }
 
@@ -77,7 +85,7 @@ class GameState extends State {
         for (int i = 0; i < 7; i++){
             layers.add(new Layer(new Image("data/sprites/layers/layer"+i+".png"), i)); // adding layers to the background.
         }
-        player = new Player(startX, startY - Animations.startHeight - 1);
+        player = new Player(startX, startY - Animations.startHeight + Block.tileHeight + 1);
         camera = new Camera();
         gui = new Gui();
         gametime = 0;
@@ -87,7 +95,7 @@ class GameState extends State {
         dTranslatedX = 0;
         dTranslatedY = 0;
         timeFlow = 1;
-        restart = false;
+        musicPos = 0;
         if(Medrun.music != null){
             MusicPlayer.restart();
         }
@@ -145,9 +153,12 @@ class GameState extends State {
         gui.update(player.xSpeed);
         //System.out.println("player X: " + player.getX() + "   player Y: " + player.getY() + "   player Xspeed: " + player.getxSpeed()+ "   player Yspeed:  " + player.getySpeed());
     
-        if(input.isKeyPressed(Input.KEY_R) && !restart){
-            restart = true;
+        if(input.isKeyPressed(Input.KEY_R) && Camera.started){
             sbg.getCurrentState().init(gc, sbg);
+        }
+        if(input.isKeyPressed(Input.KEY_P) || input.isKeyPressed(Input.KEY_ESCAPE)){
+            
+            sbg.enterState(Medrun.PAUSE);
         }
     }
 

@@ -65,8 +65,9 @@ public class Medrun extends StateBasedGame {
      *
      * @param name
      * @throws java.io.IOException
+     * @throws org.newdawn.slick.SlickException
      */
-    public Medrun(String name) throws IOException {
+    public Medrun(String name) throws IOException, SlickException {
         super(name);
         this.addState(new SplashState(SPLASH));
         this.addState(new MenuState(MENU));
@@ -105,7 +106,7 @@ public class Medrun extends StateBasedGame {
         app.setShowFPS(displayFPS);
         app.setTargetFrameRate(targetFramerate);
         app.setVSync(vSync);
-        //app.setMinimumLogicUpdateInterval(minUpdateTime);
+        app.setMinimumLogicUpdateInterval(minUpdateTime);
         app.start();
         game.enterState(SPLASH);
     }

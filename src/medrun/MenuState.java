@@ -27,10 +27,10 @@ class MenuState extends State {
     Input input;
     Button[] buttons;
     Image background;
-    Font font;
-    TrueTypeFont trueType;
+    Image title;
     boolean mouseCheck;
-    static final float fontSize = 200;
+    static final float fontSize = 150;
+    float gameMusicTime;
     public static final String menuMusicRef = "data/music/menumusic.aif";
 
     public MenuState(int stateID) {
@@ -42,9 +42,17 @@ class MenuState extends State {
         System.out.println("Entered Menu State");
         if (Medrun.music != null) {
             if (!MusicPlayer.getRef().equals(menuMusicRef)) {
+                if(MusicPlayer.getRef().equals(GameState.gameMusicRef)){
+                    gameMusicTime = MusicPlayer.getMusic().getPosition();
+                }
                 MusicPlayer.changeMusic(menuMusicRef);
             }
             Medrun.music.play();
+        }
+        if(GameState.gametime != 0){
+            buttons[4].setTitle("Continue");
+        } else if(!buttons[4].getTitle().equals("Start")){
+            buttons[4].setTitle("Start");
         }
     }
 
@@ -57,18 +65,13 @@ class MenuState extends State {
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
         mouseCheck = false;
         background = new Image("data/sprites/layers/layer0.png");
+        title = new Image("data/sprites/title.png");
+        title.setFilter(Image.FILTER_NEAREST);
         Medrun.music = new MusicPlayer(menuMusicRef);
         buttons = new Button[]{new Button("Exit"), new Button("Settings"), new Button("Achievements"),
             new Button("Leaderboards"), new Button("Start")};
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].setY(Medrun.getHeight() - (buttons[i].getHeight() + 16)*(i+1));
-        }
-        try {
-            font = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, new File("data/fonts/ka.ttf"));
-            font = font.deriveFont(fontSize);
-            trueType = new TrueTypeFont(font, true);
-        } catch (FontFormatException | IOException e) {
-            System.out.println("Error in GUI.java on line 36-38");
         }
     }
 
@@ -78,7 +81,8 @@ class MenuState extends State {
         for (Button button : buttons) { // för alla button i arrayen buttons
             button.render(); // rendera button
         }
-        Medrun.renderCenterdText(trueType, "MEDRUN", Medrun.width/2, 200, new Color(Color.black));
+        Medrun.renderScaledCenter(title, Medrun.width/2, 200, 1.5f);
+        //Medrun.renderCenterdText(trueType, "MEDRUN", Medrun.width/2, 200, Color.white);
     }
 
     @Override
@@ -101,6 +105,11 @@ class MenuState extends State {
                 if (button.isClick()) {
                     button.togglePress();
                     switch (button.getTitle()) {
+                        case "Continue":
+                            MusicPlayer.stop();
+                            GameState.musicPos = gameMusicTime;
+                            sbg.enterState(Medrun.GAME);
+                            break;
                         case "Start":
                             MusicPlayer.stop();
                             sbg.enterState(Medrun.GAME);

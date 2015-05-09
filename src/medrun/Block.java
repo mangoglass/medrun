@@ -119,7 +119,7 @@ public class Block implements Renderable {
             try {
                 return this.tiledMap.getTileId(tilePos[X] + 1, tilePos[Y], this.tiledMap.getLayerIndex("Collision")) != 1;
             } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println("Error in Block.java at row 116, exception type: ArrayIndexOutOfBoundsException");
+                System.out.println("Error in Block.java at row 120, exception type: ArrayIndexOutOfBoundsException");
                 return true;
             }
         }
@@ -133,7 +133,7 @@ public class Block implements Renderable {
             try {
                 return this.tiledMap.getTileId(tilePos[X], tilePos[Y] - 1, this.tiledMap.getLayerIndex("Collision")) != 1;
             } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println("Error in Block.java at row 124, exception type: ArrayIndexOutOfBoundsException");
+                System.out.println("Error in Block.java at row 134, exception type: ArrayIndexOutOfBoundsException");
                 return true;
             }
         }
@@ -147,7 +147,7 @@ public class Block implements Renderable {
             try {
                 return this.tiledMap.getTileId(tilePos[X], tilePos[Y] + 1, this.tiledMap.getLayerIndex("Collision")) != 1;
             } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println("Error in Block.java at row 134, exception type: ArrayIndexOutOfBoundsException");
+                System.out.println("Error in Block.java at row 148, exception type: ArrayIndexOutOfBoundsException");
                 return true;
             }
         }

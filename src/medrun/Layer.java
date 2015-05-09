@@ -36,6 +36,7 @@ public class Layer implements Renderable {
 
     public Layer(Image image, int index) {
         this.image = image;
+        this.image.setFilter(Image.FILTER_NEAREST);
         this.index = index; // the index is the layers position in relation to the other layers, higher index is closer to the "screen". 
         x = 0;
         if (index != 0) {
