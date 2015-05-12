@@ -30,7 +30,7 @@ public class Camera {
 
     public Camera() {
         started = false;
-        xAcc = 0.01f;
+        xAcc = 3;
         yAcc = 0;
     }
 
@@ -49,7 +49,7 @@ public class Camera {
                 yAcc = (yDiff / yDiviator) * deltaRatio;
             }
             if (xAcc < startSpeed) {
-                xAcc += (xAcc/4) * deltaRatio;
+                xAcc += (0.05f) * deltaRatio;
             } else if (xAcc > startSpeed) {
                 xAcc = startSpeed;
             }

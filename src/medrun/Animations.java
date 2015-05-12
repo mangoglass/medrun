@@ -11,12 +11,14 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
 /**
+ * The Animations class contains all the player animations, and the logic behind
+ * rendering the right animation at the right time.
  *
- * @author Admin
+ * @author Tom Axblad
  */
 public class Animations {
 
-    // these ar all so the animations are easier to find in the animations list.
+    // The indexes of the animations in the "animations" array, these are used instead of numbers to find the correct animation more easily.
     public static final int IDLE = 0;
     public static final int RUN = 1;
     public static final int VICTORY = 2;
@@ -34,24 +36,55 @@ public class Animations {
     public static final int INAIRDOWN = 14;
     public static final int LAND = 15;
 
-    public static final int FAST = 30; // Fast animation speed, mesured in miliseconds per frame.
+    public static final int FAST = 40; // Fast animation speed, mesured in miliseconds per frame.
     public static final int SLOW = 100; // Slow animation speed.
     public static final int NORMAL = 70; // Normal animation speed.
 
+    /**
+     * The width that the animations have from the start, the width can be
+     * altered in the code and this integer will then be used to restore the
+     * normal animation width.
+     */
     public static final int startWidth = 100;
+    /**
+     * The height that the animations have from the start, the height can be
+     * altered in the code and this integer will then be used to restore the
+     * normal animation height.
+     */
     public static final int startHeight = 100;
+
+    /**
+     * The duration difference that will be used when slowing down or speeding
+     * up the current animation.
+     */
     public static final int speedChanger = 15;
+
+    /** The animation width. */
     public static int width;
+    /** The animation height. */
     public static int height;
-    
-    public static final float airSpeedSwitch = 10; // How small the yspeed value of the player needs to be to trigger the inair switch event.
+
+    /** How small the ySpeed value of the player needs to be to trigger the inAir switch event. */
+    public static final float airSpeedSwitch = 10;
+    /** The file containing the animations that we will use. */
     public SpriteSheet sprites;
+    /** The array containing all the animations that we will use. */
     public Animation[] animations;
+    /** The current set animation. */
     public Animation current;
-    
+
+    /** A boolean telling the game if the animations is currently sped up. */
     boolean fasterRun = false;
+    /** A boolean telling the game if the animations is currently slowed down. */
     boolean slowerRun = false;
-    
+
+    /**
+     * Creates a new Animations object, here we load the static animation sheet
+     * from the data folder and divide the different animations in an array
+     * called "animations".
+     *
+     * @throws SlickException
+     */
     public Animations() throws SlickException {
         sprites = new SpriteSheet("data/sprites/player.png", 70, 70, Color.green);
         width = startWidth;
@@ -60,10 +93,10 @@ public class Animations {
             new Animation(sprites, 0, 0, 7, 0, true, NORMAL, false),
             new Animation(sprites, 0, 1, 7, 1, true, NORMAL, false),
             new Animation(sprites, 0, 2, 7, 2, true, NORMAL, false),
-            new Animation(sprites, 0, 3, 4, 5, true, FAST, false),
-            new Animation(sprites, 0, 6, 1, 6, true, NORMAL, false),
+            new Animation(sprites, 0, 3, 4, 5, true, SLOW, false),
+            new Animation(sprites, 0, 6, 1, 6, true, FAST, false),
             new Animation(sprites, 0, 7, 3, 7, true, NORMAL, false),
-            new Animation(sprites, 0, 8, 2, 8, true, NORMAL, false),
+            new Animation(sprites, 0, 8, 2, 8, true, FAST, false),
             new Animation(sprites, 0, 9, 3, 11, true, NORMAL, false),
             new Animation(sprites, 0, 12, 7, 12, true, SLOW, false),
             new Animation(sprites, 0, 13, 4, 13, true, FAST, false),
@@ -89,20 +122,34 @@ public class Animations {
                     break;
             }
         }
-        current = animations[POINT];
-        current.setLooping(false);
+        current = animations[IDLE];
         current.setAutoUpdate(false);
     }
 
+    /**
+     * Updates the animations so that the correct animation is rendered at the
+     * right time.
+     *
+     * @param delta the time between the last frame and this on e measured in
+     * milliseconds.
+     * @param player the player object that we use for calculation the current
+     * player position and the current player parameters.
+     */
     public void update(int delta, Player player) {
 
         float ySpeed = player.getySpeed(); // to reduce code size.
-        
+
         if (player.dead && !player.onGround && isNotAnimation(SPIN)) {
             changeAnimation(SPIN);
-        } else if(player.dead && player.onGround && isNotAnimation(CRASH)){
+        } else if (player.dead && player.onGround && isNotAnimation(CRASH)) {
             changeAnimation(CRASH);
-        }else if (!player.dead) {
+        } else if (!player.dead && !Camera.started) {
+            if (GameState.gametime > 500 && GameState.gametime < 1000) {
+                changeAnimation(POINT);
+            } else if (isAnimation(POINT) && current.isStopped()) {
+                changeAnimation(IDLE);
+            }
+        } else if (!player.dead && Camera.started) {
             if (ySpeed < -airSpeedSwitch && isNotAnimation(INAIRUP)) {
                 changeAnimation(INAIRUP);
             } else if (ySpeed > -airSpeedSwitch && ySpeed < airSpeedSwitch && !player.isOnGround()) {
@@ -110,7 +157,7 @@ public class Animations {
                 if (isNotAnimation(INAIRSHIWTCH)) {
                     changeAnimation(INAIRSHIWTCH);
                 }
-                if (ySpeed < -airSpeedSwitch + fourth && current.getFrame() != 0) { 
+                if (ySpeed < -airSpeedSwitch + fourth && current.getFrame() != 0) {
                     current.setCurrentFrame(0);
                 } else if (ySpeed > -airSpeedSwitch + fourth && ySpeed < -airSpeedSwitch + 2 * fourth && current.getFrame() != 1) {
                     current.setCurrentFrame(1);
@@ -128,82 +175,109 @@ public class Animations {
 
             } else if (ySpeed > airSpeedSwitch && isNotAnimation(INAIRDOWN)) {
                 changeAnimation(INAIRDOWN);
-            } else if (player.isOnGround() && isAnimation(INAIRDOWN)) {
+            } else if (player.isOnGround() && (isAnimation(INAIRDOWN) || isAnimation(Animations.INAIRSHIWTCH))) {
                 changeAnimation(LAND);
                 current.restart();
             } else if (player.isOnGround() && isAnimation(LAND) && current.isStopped()) {
                 changeAnimation(RUN);
             }
-            
-            if( player.isSliding() && isAnimation(RUN)){
+
+            if (player.isSliding() && isAnimation(RUN)) {
                 changeAnimation(SLIDESTART);
-            } else if(player.isSliding() && isAnimation(SLIDESTART) && current.isStopped()){
+                current.restart();
+            } else if (player.isSliding() && isAnimation(SLIDESTART) && current.isStopped()) {
                 changeAnimation(SLIDE);
-            } else if(player.isOnGround() && !player.isSliding() && isAnimation(SLIDE)){
+            } else if (player.isOnGround() && !player.isSliding() && isAnimation(SLIDE)) {
                 changeAnimation(SLIDESTOP);
-            } else if(player.isOnGround() && !player.isSliding() && isAnimation(SLIDESTOP) && current.isStopped()){
+                current.restart();
+            } else if (player.isOnGround() && !player.isSliding() && ((isAnimation(SLIDESTOP) && current.isStopped()) || isAnimation(SLIDESTART))) {
                 changeAnimation(RUN);
             }
-            
-            if(isAnimation(RUN)){
-                if(player.forwards && !fasterRun){
+
+            if (isAnimation(RUN)) {
+                if (player.forwards && !fasterRun) {
                     fasterRun = true;
                     slowerRun = false;
                     changeDuration(NORMAL - speedChanger);
                     System.out.println("aaaa");
-                } else if(player.backwards && !slowerRun){
+                } else if (player.backwards && !slowerRun) {
                     slowerRun = true;
                     fasterRun = false;
                     changeDuration(NORMAL + speedChanger);
-                } else if(!player.backwards && !player.forwards && (fasterRun || slowerRun)){
+                } else if (!player.backwards && !player.forwards && (fasterRun || slowerRun)) {
                     fasterRun = false;
                     slowerRun = false;
                     defaultSpeed();
                 }
             }
-            
+
         }
 
         current.update(delta);
     }
 
+    /**
+     * Draws the current player animation (stored in a animation object called
+     * "current") on the screen.
+     *
+     * @param x Which point on the x-axis that the animation will be drawn at.
+     * @param y Which point on the y-axis that the animation will be drawn at.
+     */
     public void draw(float x, float y) {
-        
+
         current.draw(x, y, width, height);
     }
 
+    /**
+     * Returns the list containing all the player animations.
+     *
+     * @return returns the array object called "animations".
+     */
     public Animation[] getAnimations() {
         return animations;
     }
-    
-    public void changeAnimation(int animation){
+
+    /**
+     * changes the current player animation to the specified animation in the
+     * "animations" array.
+     *
+     * @param animation An integer specifying what index in the "animations"
+     * array to use. The "current" object will be set to this animation.
+     */
+    public void changeAnimation(int animation) {
         current = animations[animation];
-        if(GameState.timeFlow != 1){
+        if (GameState.timeFlow != 1) {
             defaultSpeed();
         }
     }
-    
-    public void changeDuration(float duration){
-        if(GameState.timeFlow != 1){
+
+    /**
+     * Changes the duration of the animation by altering the speed parameter for
+     * the "current" object.
+     *
+     * @param duration
+     */
+    public void changeDuration(float duration) {
+        if (GameState.timeFlow != 1) {
             current.setSpeed((current.getDuration(0) * GameState.timeFlow) / duration);
-        } else{
+        } else {
             current.setSpeed(current.getDuration(0) / duration);
         }
     }
-    
-    public void defaultSpeed(){
-        if(GameState.timeFlow != 1){
+
+    public void defaultSpeed() {
+        if (GameState.timeFlow != 1) {
             current.setSpeed(current.getDuration(0) / (current.getDuration(0) * GameState.timeFlow));
-        } else{
+        } else {
             current.setSpeed(1);
         }
     }
-    
-     public boolean isAnimation(int animation){
+
+    public boolean isAnimation(int animation) {
         return current == animations[animation];
     }
-     
-    public boolean isNotAnimation(int animation){
+
+    public boolean isNotAnimation(int animation) {
         return current != animations[animation];
     }
 

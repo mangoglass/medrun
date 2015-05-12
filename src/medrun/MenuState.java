@@ -5,22 +5,19 @@
  */
 package medrun;
 
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.io.File;
-import java.io.IOException;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
+ * The menu state is the state the game transitions to after the splash state,
+ * here the user can enter different states of the game by pressing buttons
+ * shown on the screen.
  *
- * @author Admin
+ * @author Tom Axblad
  */
 class MenuState extends State {
 
@@ -42,16 +39,21 @@ class MenuState extends State {
         System.out.println("Entered Menu State");
         if (Medrun.music != null) {
             if (!MusicPlayer.getRef().equals(menuMusicRef)) {
-                if(MusicPlayer.getRef().equals(GameState.gameMusicRef)){
+                if (MusicPlayer.getRef().equals(GameState.gameMusicRef)) {
                     gameMusicTime = MusicPlayer.getMusic().getPosition();
                 }
                 MusicPlayer.changeMusic(menuMusicRef);
             }
             Medrun.music.play();
         }
-        if(GameState.gametime != 0){
+        if (Camera.started && !GameState.player.dead) {
             buttons[4].setTitle("Continue");
-        } else if(!buttons[4].getTitle().equals("Start")){
+        } else if (GameState.player.dead || !Camera.started) {
+            sbg.getState(Medrun.GAME).init(gc, sbg);
+            if (!buttons[4].getTitle().equals("Start")) {
+                buttons[4].setTitle("Start");
+            }
+        } else if (!buttons[4].getTitle().equals("Start")) {
             buttons[4].setTitle("Start");
         }
     }
@@ -71,7 +73,7 @@ class MenuState extends State {
         buttons = new Button[]{new Button("Exit"), new Button("Settings"), new Button("Achievements"),
             new Button("Leaderboards"), new Button("Start")};
         for (int i = 0; i < buttons.length; i++) {
-            buttons[i].setY(Medrun.getHeight() - (buttons[i].getHeight() + 16)*(i+1));
+            buttons[i].setY(Medrun.getHeight() - (buttons[i].getHeight() + 16) * (i + 1));
         }
     }
 
@@ -81,7 +83,7 @@ class MenuState extends State {
         for (Button button : buttons) { // för alla button i arrayen buttons
             button.render(); // rendera button
         }
-        Medrun.renderScaledCenter(title, Medrun.width/2, 200, 1.5f);
+        Medrun.renderScaledCenter(title, Medrun.width / 2, 200, 1.5f);
         //Medrun.renderCenterdText(trueType, "MEDRUN", Medrun.width/2, 200, Color.white);
     }
 
@@ -91,7 +93,7 @@ class MenuState extends State {
         if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) { // If the player is holding the left mouse button down.
             mouseCheck = true;
             for (Button button : buttons) {
-                if (button.isInButton(input.getMouseX(), input.getMouseY())) { 
+                if (button.isInButton(input.getMouseX(), input.getMouseY())) {
                     if (!button.isClick()) {
                         button.togglePress();
                     }
@@ -99,7 +101,7 @@ class MenuState extends State {
                     button.togglePress();
                 }
             }
-        } else if (mouseCheck) { // If the mouse have been clicked but we haven't checked whats been clicke yet.
+        } else if (mouseCheck) { // If the mouse have been clicked but we haven't checked whats been clicked yet.
             mouseCheck = false;
             for (Button button : buttons) {
                 if (button.isClick()) {
@@ -108,7 +110,7 @@ class MenuState extends State {
                         case "Continue":
                             MusicPlayer.stop();
                             GameState.musicPos = gameMusicTime;
-                            sbg.enterState(Medrun.GAME);
+                            sbg.enterState(Medrun.PAUSE);
                             break;
                         case "Start":
                             MusicPlayer.stop();

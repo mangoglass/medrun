@@ -19,14 +19,15 @@ import org.newdawn.slick.TrueTypeFont;
  */
 public class Gui implements Renderable{
     
-    final int xMargin = 350;
+    final int xMargin = 50;
     final int yMargin = 20;
     final int fontSize = 40;
-    final int scoreWidth = 200;
+    final int scoreWidth = 500;
     
     float x;
     float y;
     float score;
+    float length;
     int width;
     int height;
     Font font;
@@ -41,7 +42,7 @@ public class Gui implements Renderable{
             font = font.deriveFont((float)fontSize);
             trueType = new TrueTypeFont(font, false);
         } catch (FontFormatException | IOException e) {
-            System.out.println("Error in GUI.java on line 36-38");
+            System.out.println("Error in GUI.java on line 40");
         }
     }
     
@@ -49,11 +50,13 @@ public class Gui implements Renderable{
         x = GameState.translatedX;
         y = GameState.translatedY;
         score += distance/10;
+        length +=  distance/(Block.TILEWIDTH*2);
     }    
 
     @Override
     public void render() {
         trueType.drawString(x + width - scoreWidth - xMargin, y + yMargin, "Score   " + scoreNumber(), Color.white);
+        trueType.drawString(x + xMargin, y + yMargin, "Distance   " + length(), Color.white);
     }
     
     public String scoreNumber(){
@@ -65,5 +68,9 @@ public class Gui implements Renderable{
         }
         list.add(String.valueOf(rounded));
         return String.join("", list);
+    }
+    
+    public String length(){
+        return String.valueOf((int)length) + " m";
     }
 }

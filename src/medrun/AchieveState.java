@@ -11,8 +11,10 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
+ * The Achieve state is a state linked to the MenuState. Here the user will be
+ * able to look at all the unlocked achievements.
  *
- * @author Admin
+ * @author Tom Axblad
  */
 class AchieveState extends State {
 
@@ -39,5 +41,5 @@ class AchieveState extends State {
     @Override
     public void update(GameContainer gc, StateBasedGame sbg, int i) throws SlickException {
     }
-    
+
 }

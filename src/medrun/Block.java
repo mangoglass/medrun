@@ -9,16 +9,19 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;
 
 /**
+ * A Block object is usually a building that the player can traverce trough out
+ * the game. It has a multitude of parameters that decides how it looks and
+ * where it should be rendered.
  *
- * @author Admin
+ * @author Tom Axblad
  */
 public class Block implements Renderable {
 
     public static final int X = 0;
     public static final int Y = 1;
 
-    public static final int tileWidth = 32;
-    public static final int tileHeight = 32;
+    public static final int TILEWIDTH = 32;
+    public static final int TILEHEIGHT = 32;
 
     public static final int STARTBLOCK = 0;
     public static final int REGULARCUBE = 1;
@@ -34,6 +37,15 @@ public class Block implements Renderable {
     int x;
     int y;
 
+    /**
+     * The constructor for the Block Class.
+     *
+     * @param type Depending on what type that is inputed, the block will look
+     * diffentently.
+     * @param x The x value that the block should have and be rendered on.
+     * @param y The y value that the block should have and be rendered on.
+     * @throws SlickException
+     */
     public Block(int type, int x, int y) throws SlickException {
         this.x = x;
         this.y = y;
@@ -60,42 +72,62 @@ public class Block implements Renderable {
         }
     }
 
+    /**
+     * The render function for a block object, draws the block object on the set
+     * x and y values.
+     */
     @Override
     public void render() {
         tiledMap.render((int) x, (int) y, 0);
     }
 
+    /**
+     * @return Returns the integer type of the block.
+     */
     public int getType() {
         return type;
     }
 
+    /**
+     * @return Returns the integer x of the block.
+     */
     public float getX() {
         return x;
     }
 
+    /**
+     * @return Returns the integer y of the block.
+     */
     public float getY() {
         return y;
     }
 
+    /**
+     * @return Returns the static tile width.
+     */
     public int getTiledWidth() {
         return tiledMap.getWidth();
     }
 
+    /**
+     * @return Returns the static tile HEIGHT.
+     */
     public int getTiledHeight() {
         return tiledMap.getHeight();
     }
 
     /**
      * Returns the width of the block in pixels.
+     *
      * @return an int representing the width.
      */
     public int getWidth() {
         //System.out.println(this.tiledMap.getWidth());
-        return tiledMap.getWidth() * tileWidth;
+        return tiledMap.getWidth() * TILEWIDTH;
     }
 
     public int getHeight() {
-        return tiledMap.getHeight() * tileHeight;
+        return tiledMap.getHeight() * TILEHEIGHT;
     }
 
     public boolean inBlock(float[] pos) {
@@ -155,8 +187,8 @@ public class Block implements Renderable {
 
     public boolean isColliding(float[] pos) {
         int[] block = {
-            (int) ((pos[X] - (float) this.x - (pos[X] - (float) this.x) % (float) tileWidth) / (float) tileWidth), // the input x position subtracted with the blocks x position subtracted with the distance to the nearest tiles' x value, this becomes the x position of the nearest tile in pixels, lastly we divide by the pixel width of one tile.
-            (int) ((pos[Y] - (float) this.y - (pos[Y] - (float) this.y) % (float) tileHeight) / (float) tileHeight) // the same as above, but with the y positions.
+            (int) ((pos[X] - (float) this.x - (pos[X] - (float) this.x) % (float) TILEWIDTH) / (float) TILEWIDTH), // the input x position subtracted with the blocks x position subtracted with the distance to the nearest tiles' x value, this becomes the x position of the nearest tile in pixels, lastly we divide by the pixel width of one tile.
+            (int) ((pos[Y] - (float) this.y - (pos[Y] - (float) this.y) % (float) TILEHEIGHT) / (float) TILEHEIGHT) // the same as above, but with the y positions.
         };
         if (block[X] < 0 || block[X] > this.tiledMap.getWidth() - 1 || block[Y] < 0 || block[Y] > this.tiledMap.getHeight() - 1) {
             return false;
@@ -174,17 +206,17 @@ public class Block implements Renderable {
 
     public int[] getTileMapPos(float[] pos) {
         return new int[]{
-            (int) pos[X] - this.x % tileWidth,
-            (int) pos[Y] - this.y % tileHeight
+            (int) pos[X] - this.x % TILEWIDTH,
+            (int) pos[Y] - this.y % TILEHEIGHT
         };
     }
-    
+
     /**
      *
      * @param pos The input position that we use.
      * @return
      */
-    public boolean inXRangeOfBlock(float[] pos){
+    public boolean inXRangeOfBlock(float[] pos) {
         return pos[X] > this.x && pos[X] < this.x + this.getWidth();
     }
 }

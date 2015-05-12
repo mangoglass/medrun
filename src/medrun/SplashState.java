@@ -23,16 +23,20 @@ public class SplashState extends State {
     Animation water;
     SpriteSheet splash;
 
+    /**
+     * The splash state is the first state that will run when the game is started, it displays a splash animation and then transitions to the main menu.
+     * @param stateID The integer identification of this state.
+     */
     public SplashState(int stateID) {
         super(stateID);
-        displayWidth = 1980;
-        displayHeight = 1080;
+        displayWidth = Medrun.width;
+        displayHeight = Medrun.height;
     }
 
     @Override
     public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
         System.out.println("Entered splash state");
-        sbg.enterState(Medrun.GAME);
+        //sbg.enterState(Medrun.GAME);
     }
 
     @Override
@@ -59,6 +63,13 @@ public class SplashState extends State {
         }
     }
     
+    /**
+     *
+     * @param anim
+     * @param x
+     * @param y
+     * @param scale
+     */
     public static void renderScaledCenter(Animation anim, int x, int y, int scale){
         anim.draw(x - 20 - anim.getWidth()*scale/2, y - anim.getHeight()*scale/2, anim.getWidth()*scale, anim.getHeight()*scale);
     }

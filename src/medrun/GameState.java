@@ -15,15 +15,18 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
+ * The GameState class is the class that contains the game. here, all the game
+ * logic is updated, and all the different sprites is rendered on the screen.
  *
- * @author Admin
+ *
+ * @author Tom Axblad
  */
 class GameState extends State {
 
     public static final String gameMusicRef = "data/music/gamemusic.aif";
     public static final float startX = 500;
-    public static final float startY = 600;    
-    
+    public static final float startY = 600;
+
     public static int gametime;
     public static int frames;
     public static Player player;
@@ -44,8 +47,7 @@ class GameState extends State {
     public static boolean restarted = false;
     Random random;
     Input input;
-    
-    
+
     public GameState(int stateID) {
         super(stateID);
     }
@@ -58,9 +60,9 @@ class GameState extends State {
                 MusicPlayer.changeMusic(gameMusicRef);
                 MusicPlayer.getMusic().setPosition(musicPos);
                 MusicPlayer.play();
-            } else if(!MusicPlayer.getMusic().playing() && !restarted){
+            } else if (!MusicPlayer.getMusic().playing() && !restarted) {
                 MusicPlayer.getMusic().resume();
-            } else if(restarted){
+            } else if (restarted) {
                 MusicPlayer.restart();
                 MusicPlayer.play();
                 restarted = false;
@@ -78,14 +80,14 @@ class GameState extends State {
         layers = new ArrayList<>();
         blocks = new ArrayList<>();
         random = new Random();
-        latestBlockX = (int)startX-40;
-        latestBlockY = (int)startY;
+        latestBlockX = (int) startX - 40;
+        latestBlockY = (int) startY;
         blocks.add(new Block(Block.STARTBLOCK, latestBlockX, latestBlockY));
-        latestBlockWidth = blocks.get(blocks.size()-1).getWidth();
-        for (int i = 0; i < 7; i++){
-            layers.add(new Layer(new Image("data/sprites/layers/layer"+i+".png"), i)); // adding layers to the background.
+        latestBlockWidth = blocks.get(blocks.size() - 1).getWidth();
+        for (int i = 0; i < 7; i++) {
+            layers.add(new Layer(new Image("data/sprites/layers/layer" + i + ".png"), i)); // adding layers to the background.
         }
-        player = new Player(startX, startY - Animations.startHeight + Block.tileHeight + 1);
+        player = new Player(startX, startY - Animations.startHeight + Block.TILEHEIGHT + 1);
         camera = new Camera();
         gui = new Gui();
         gametime = 0;
@@ -96,7 +98,7 @@ class GameState extends State {
         dTranslatedY = 0;
         timeFlow = 1;
         musicPos = 0;
-        if(Medrun.music != null){
+        if (Medrun.music != null) {
             MusicPlayer.restart();
         }
     }
@@ -115,90 +117,136 @@ class GameState extends State {
     }
 
     @Override
-    public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-        input = gc.getInput();
-        gametime += delta;
-        frames ++;
-        deltaRatio = ((float)(delta)) / (gametime/frames); // I devide the total gametime with the number of frames because that is the average time between frames in miliseconds.
+    public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException { // the main update loop for the game. From here all the game logic is updated.
+        input = gc.getInput(); // gets the current input from the game container.
+        gametime += delta; // updates the played time. played time is stored as milliseconds.
+        frames++; // updates the current frame.
+        deltaRatio = ((float) (delta)) / (gametime / frames); // I devide the total gametime with the number of frames because that is the average time between frames in miliseconds.
         //System.out.println("delta Ratio: " + deltaRatio);
-        layers.stream().forEach((layer) -> {
-            layer.update(deltaRatio); // The delta variable is the time in milliseconds between updates, it can be used to keep track of time and update positions properly.
+        layers.stream().forEach((layer) -> { // for each layer in the layers array.
+            layer.update(deltaRatio); // Update the layer. The delta variable is the time in milliseconds between frames, it can be used to keep track of time and update positions properly.
         });
-        
-        if(latestBlockX + latestBlockWidth < translatedX + Medrun.width){ // if the latest block's right side is in the picture, we generate a new block.
-            latestBlockX += latestBlockWidth + random.nextInt((int) (1 + dTranslatedX*20)) + 200; //differates between 200 and ten times the current speed the game is moving with
-            if(latestBlockY < 500){
-                latestBlockY += (random.nextInt((int) (300 + dTranslatedX*15)) - random.nextInt((int) (300 + dTranslatedX*15))); // differates between +- ten times the current moving speed added to the last block.
-            } else{
-                latestBlockY -= random.nextInt((int) (200 + dTranslatedX*15)); // differates between - ten times the current moving speed added to the last block.
+
+        if (latestBlockX + latestBlockWidth < translatedX + Medrun.width) { // if the latest block's right side is in the picture, we generate a new block.
+            latestBlockX += latestBlockWidth + random.nextInt((int) (1 + dTranslatedX * 30)) + 200; //differates between 200 and 30 times the current speed the game is moving with
+            if (latestBlockY < 500 && player.getX() < 10000) { // if the player hasn't gottent to 10000 in the x-axis yet and the last block was over the 500 limit.
+                latestBlockY += (random.nextInt((int) (80 + getBlockVaryingHeight())) - random.nextInt((int) (80 + getBlockVaryingHeight()))); // differates between +- the maximum jump height depending on how far the player has gotten.
+            } else if (player.getX() < 10000) {
+                latestBlockY -= random.nextInt((int) (80 + getBlockVaryingHeight())); // differates between 0 and -600 depending on how far the player has gotten.
+            } else if (latestBlockY < 500) {
+                latestBlockY += (random.nextInt(Player.MAXJUMPHEIGHT - 10) - random.nextInt(Player.MAXJUMPHEIGHT) - 10); // differates between +- the maximum jump height.
+            } else {
+                latestBlockY -= random.nextInt(Player.MAXJUMPHEIGHT - 10); // differates between 0 and -700
             }
-            int randBlockType = random.nextInt((int) (dTranslatedX/10) + 3) + 1; // decides what the next block shall be. CHANGE IF NECCECARY LATER!
+            int randBlockType = random.nextInt((int) (dTranslatedX / 10) + 3) + 1; // decides what the next block shall be. CHANGE IF NECCECARY LATER!
             blocks.add(new Block(randBlockType, latestBlockX, latestBlockY));
             //System.out.println("(added) number of active blocks is now: " + blocks.size());
-            latestBlockWidth = blocks.get(blocks.size()-1).getWidth();
+            latestBlockWidth = blocks.get(blocks.size() - 1).getWidth(); // gets the width of the last block in the blocks array and stores it.
         }
-        for(int i = 0; i < blocks.size(); i++){
-            if(blocks.get(i).x + blocks.get(i).getWidth() < translatedX){
-                blocks.remove(i);
-                blocks.trimToSize();
+        for (int i = 0; i < blocks.size(); i++) { // checks all the curent active blocks.
+            if (blocks.get(i).x + blocks.get(i).getWidth() < translatedX) { // if this block is not visible.
+                blocks.remove(i); // remove the block.
+                blocks.trimToSize(); // change the size of the active blocks array so that is is the right size.
                 //System.out.println("(removed) number of active blocks is now: " + blocks.size());
             }
         }
-        
-        translatedX += dTranslatedX * deltaRatio; 
-        translatedY += dTranslatedY * deltaRatio; 
-        //System.out.println("xChange:   " + xChange + "   yChange:   " + yChange);
-        player.update(delta, deltaRatio, input);
-        camera.update(gametime, deltaRatio, player);
-        gui.update(player.xSpeed);
+
+        translatedX += dTranslatedX * deltaRatio; // changes the translate varable in the x-axis, this is used to "move" the camera.
+        translatedY += dTranslatedY * deltaRatio; // changes the translate varable in the x-axis, this is used to "move" the camera.
+        player.update(delta, deltaRatio, input); // updates the player object. 
+        camera.update(gametime, deltaRatio, player); // updates the camera object.
+        gui.update(player.xSpeed); // updates the gui object.
         //System.out.println("player X: " + player.getX() + "   player Y: " + player.getY() + "   player Xspeed: " + player.getxSpeed()+ "   player Yspeed:  " + player.getySpeed());
-    
-        if(input.isKeyPressed(Input.KEY_R) && Camera.started){
-            sbg.getCurrentState().init(gc, sbg);
-        }
-        if(input.isKeyPressed(Input.KEY_P) || input.isKeyPressed(Input.KEY_ESCAPE)){
-            
-            sbg.enterState(Medrun.PAUSE);
+
+        if (input.isKeyPressed(Input.KEY_ESCAPE)) { // if the player pressed the ecape key in the last frame.
+            gc.getGraphics().copyArea(PauseState.pauseFrame, 0, 0); // screenshots the current visible screent and sends it to the pauseFrame image object in the pauseState.
+            sbg.enterState(Medrun.PAUSE); // Enter the pause state.
         }
     }
 
-    public static float getxChange() {
+    /**
+     * calculates the maximum height that the next block can have based on the
+     * the last blocks position on the y-axis, the players maximum jump height,
+     * and the players current position on the x-axis. The further the player
+     * has gotten the higher the block can position it self.
+     *
+     * @return A float representing the maximum height the next block can take
+     * based on the last blocks position on the y-axis.
+     */
+    public float getBlockVaryingHeight() {
+        return (((float) Math.log10(1 + player.getX()) / 4) * Player.MAXJUMPHEIGHT) - 100;
+    }
+
+    /**
+     * @return returns the amount the camera has translated in the x-axis.
+     */
+    public static float getTranslatedX() {
         return translatedX;
     }
 
-    public static void setxChange(float xChange) {
-        GameState.translatedX = xChange;
+    /**
+     * @param translatedX The value to set translatedX to.
+     */
+    public static void setTranslatedX(float translatedX) {
+        GameState.translatedX = translatedX;
     }
 
-    public static float getyChange() {
+    /**
+     * @return returns the amount the camera has translated in the y-axis.
+     */
+    public static float getTranslatedY() {
         return translatedY;
     }
 
-    public static void setyChange(float yChange) {
-        GameState.translatedY = yChange;
+    /**
+     * @param translatedY The value to set translatedY to.
+     */
+    public static void setTranslatedY(float translatedY) {
+        GameState.translatedY = translatedY;
     }
 
-    public static float getXdChange() {
+    /**
+     * @return returns the speed that the camera currently translates in the
+     * x-axis.
+     */
+    public static float getDTranslatedX() {
         return dTranslatedX;
     }
 
-    public static void setXdChange(float xdChange) {
-        GameState.dTranslatedX = xdChange;
+    /**
+     * @param dTranslatedX The value to set dTranslatedX to.
+     */
+    public static void setDTranslatedX(float dTranslatedX) {
+        GameState.dTranslatedX = dTranslatedX;
     }
 
+    /**
+     * @return returns the speed that the camera currently translates in the
+     * y-axis.
+     */
     public static float getYdChange() {
         return dTranslatedY;
     }
 
-    public static void setYdChange(float ydChange) {
-        GameState.dTranslatedY = ydChange;
+    /**
+     * @param dTranslatedY The value to set dTranslatedY to.
+     */
+    public static void setYdChange(float dTranslatedY) {
+        GameState.dTranslatedY = dTranslatedY;
     }
 
+    /**
+     * @return returns the array containing the current active blocks.
+     */
     public static ArrayList<Block> getActiveBlocks() {
         return blocks;
     }
-    
-     public float getTimeFlow() {
+
+    /**
+     * @return returns the time flow that the game currently has, a 0.5 means
+     * that the game is running at 1/2 speed, 2 means x2 speed, and so on.
+     */
+    public float getTimeFlow() {
         return timeFlow;
     }
 }

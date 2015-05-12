@@ -49,7 +49,7 @@ public class Layer implements Renderable {
         render = false;
         width = image.getWidth() * scale;
         height = image.getHeight() * scale;
-        this.transitionMultiplier = 1 - ((float) Math.pow(index, 3) / 260); /* higher index yields a higher multiplier. 
+        this.transitionMultiplier = 1 - ((float) Math.pow(index, 3) / 300); /* higher index yields a higher multiplier. 
          A low scaling means that the layer will move with the camera, like it's farther away. */
 
     }
@@ -63,7 +63,7 @@ public class Layer implements Renderable {
     }
 
     public void update(float deltaRatio) {
-        x += GameState.getXdChange() * transitionMultiplier * deltaRatio;
+        x += GameState.getDTranslatedX() * transitionMultiplier * deltaRatio;
         y += GameState.getYdChange() * transitionMultiplier * deltaRatio;
 
         if (GameState.translatedX - x > width / 2) { // if the camera has moved across half of the layer

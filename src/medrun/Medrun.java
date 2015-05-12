@@ -7,7 +7,7 @@ package medrun;
 
 /**
  *
- * @author Admin
+ * @author Tom Axblad
  */
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -63,6 +63,7 @@ public class Medrun extends StateBasedGame {
 
     /**
      *
+     * The main class, from here the game will start and will create a Medrun object that is the game.
      * @param name
      * @throws java.io.IOException
      * @throws org.newdawn.slick.SlickException
@@ -88,12 +89,13 @@ public class Medrun extends StateBasedGame {
 
     /**
      *
-     * The Main class of the game Medrun. 
+     * The Main function of the game Medrun.
+     * all the different settings will be read from the settings.ini file and the application will start from here.
      * 
      * @author  Tom Axblad
      * @version 1.0
      * @since   2015-04-01  
-     * @param args
+     * @param args The java arguments that will be used when the game starts.
      * @throws org.newdawn.slick.SlickException
      * @throws java.io.FileNotFoundException
      * @throws java.io.IOException
@@ -113,7 +115,7 @@ public class Medrun extends StateBasedGame {
 
     /**
      *
-     * @param gc
+     * @param gc The game container, see Slick2d documentation for more information.
      * @throws org.newdawn.slick.SlickException
      */
     @Override
@@ -128,7 +130,8 @@ public class Medrun extends StateBasedGame {
     }
 
     /**
-     *
+     * The settings.ini file will be read using this function.
+     * All the parameteres will then be loaded into variables in this class and will be used throughout the game. 
      * @throws java.io.IOException
      */
     public static void readSettings() throws IOException {
@@ -183,7 +186,7 @@ public class Medrun extends StateBasedGame {
             } else if (line.startsWith("iMinimumLogicUpdateInterval")) {
                 minUpdateTime = Integer.parseInt(line.substring(line.indexOf("=") + 1).toLowerCase().trim());
             } else if (line.startsWith("iDifficulty")) {
-                difficulty = 1 + (1 - (Integer.parseInt(line.substring(line.indexOf("=") + 1).toLowerCase().trim())))/2; // a 1 represents 1, a 2 represents 1.5, a 3 is 2, and so on.  
+                difficulty = 1 + ((Integer.parseInt(line.substring(line.indexOf("=") + 1).toLowerCase().trim())) - 1 )/2; // a 1 represents 1, a 2 represents 1.5, a 3 is 2, and so on.  
             } else if (line.startsWith("bSMute")) {
                 switch (line.substring(line.indexOf("=") + 1).toLowerCase().trim()) {
                     case "true":

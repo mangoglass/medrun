@@ -45,6 +45,8 @@ public class Button implements Renderable {
         this.y = 0;
         unclicked = new Image("data/sprites/button.png");
         clicked = new Image("data/sprites/buttonclicked.png");
+        unclicked.setFilter(Image.FILTER_NEAREST);
+        clicked.setFilter(Image.FILTER_NEAREST);
         width = unclicked.getWidth() * scale;
         height = unclicked.getHeight() * scale;
         image = unclicked;
