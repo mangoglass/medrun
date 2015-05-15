@@ -18,10 +18,9 @@ import org.newdawn.slick.state.StateBasedGame;
  * The GameState class is the class that contains the game. here, all the game
  * logic is updated, and all the different sprites is rendered on the screen.
  *
- *
  * @author Tom Axblad
  */
-class GameState extends State {
+public class GameState extends State {
 
     public static final String gameMusicRef = "data/music/gamemusic.aif";
     public static final float startX = 500;
@@ -126,7 +125,6 @@ class GameState extends State {
         layers.stream().forEach((layer) -> { // for each layer in the layers array.
             layer.update(deltaRatio); // Update the layer. The delta variable is the time in milliseconds between frames, it can be used to keep track of time and update positions properly.
         });
-
         if (latestBlockX + latestBlockWidth < translatedX + Medrun.width) { // if the latest block's right side is in the picture, we generate a new block.
             latestBlockX += latestBlockWidth + random.nextInt((int) (1 + dTranslatedX * 30)) + 200; //differates between 200 and 30 times the current speed the game is moving with
             if (latestBlockY < 500 && player.getX() < 10000) { // if the player hasn't gottent to 10000 in the x-axis yet and the last block was over the 500 limit.

@@ -12,9 +12,9 @@ import org.newdawn.slick.state.StateBasedGame;
 
 /**
  *
- * @author Admin
+ * @author Tom Axblad
  */
-class LeaderState extends State {
+public class LeaderState extends State {
 
     public LeaderState(int stateID) {
         super(stateID);

@@ -11,10 +11,12 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
+ * This state contains the settings menu that the user will be able to use to
+ * change the different settings in the game.
  *
- * @author Admin
+ * @author Tom Axblad
  */
-class SettingsState extends State {
+public class SettingsState extends State {
 
     public SettingsState(int stateID) {
         super(stateID);
@@ -40,6 +42,4 @@ class SettingsState extends State {
     public void update(GameContainer gc, StateBasedGame sbg, int i) throws SlickException {
     }
 
-    
-    
 }

@@ -6,8 +6,8 @@
 package medrun;
 
 /**
- *
- * @author Admin
+ * The renderable interface makes sure that different objects is renderable if they implement this interface.
+ * @author Tom Axblad
  */
 public interface Renderable {
     public void render();

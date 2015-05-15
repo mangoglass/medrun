@@ -24,7 +24,7 @@ import org.newdawn.slick.state.StateBasedGame;
  *
  * @author Tom Axblad
  */
-class PauseState extends State {
+public class PauseState extends State {
 
     public static Image pauseFrame;
     private final float PFONTSIZE = 50;

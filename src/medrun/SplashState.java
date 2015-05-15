@@ -13,8 +13,8 @@ import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
- *
- * @author Admin
+ * The splash state is the first state that will run when the game is started, it displays a splash animation and then transitions to the main menu.
+ * @author Tom Axblad
  */
 public class SplashState extends State {
 
@@ -24,7 +24,7 @@ public class SplashState extends State {
     SpriteSheet splash;
 
     /**
-     * The splash state is the first state that will run when the game is started, it displays a splash animation and then transitions to the main menu.
+     * The constructor for the splash state.
      * @param stateID The integer identification of this state.
      */
     public SplashState(int stateID) {
@@ -63,12 +63,12 @@ public class SplashState extends State {
         }
     }
     
-    /**
-     *
-     * @param anim
-     * @param x
-     * @param y
-     * @param scale
+     /**
+     * Renders the input animation at the input position as center, using the input scale to scale the animation.
+     * @param anim the animation to render.
+     * @param x the x position to render at.
+     * @param y the y position to render at.
+     * @param scale the scale to use when rendering.
      */
     public static void renderScaledCenter(Animation anim, int x, int y, int scale){
         anim.draw(x - 20 - anim.getWidth()*scale/2, y - anim.getHeight()*scale/2, anim.getWidth()*scale, anim.getHeight()*scale);

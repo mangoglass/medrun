@@ -5,10 +5,6 @@
  */
 package medrun;
 
-/**
- *
- * @author Tom Axblad
- */
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
@@ -30,6 +26,12 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.StateBasedGame;
 
+/**
+ * The main class, from here the game will start and will create a Medrun object
+ * that is the game.
+ *
+ * @author Tom Axblad
+ */
 public class Medrun extends StateBasedGame {
 
     public static final int width = 1920; // the games "width" rendering something at 1920 in the x-axis will put it to the farthest right.
@@ -63,8 +65,10 @@ public class Medrun extends StateBasedGame {
 
     /**
      *
-     * The main class, from here the game will start and will create a Medrun object that is the game.
-     * @param name
+     * The constructor for the main class, from here the game will initiate the
+     * different states that the game will use.
+     *
+     * @param name the string representing the games name.
      * @throws java.io.IOException
      * @throws org.newdawn.slick.SlickException
      */
@@ -89,19 +93,19 @@ public class Medrun extends StateBasedGame {
 
     /**
      *
-     * The Main function of the game Medrun.
-     * all the different settings will be read from the settings.ini file and the application will start from here.
-     * 
-     * @author  Tom Axblad
+     * The Main function of the game Medrun. all the different settings will be
+     * read from the settings.ini file and the application will start from here.
+     *
+     * @author Tom Axblad
      * @version 1.0
-     * @since   2015-04-01  
+     * @since 2015-04-01
      * @param args The java arguments that will be used when the game starts.
      * @throws org.newdawn.slick.SlickException
      * @throws java.io.FileNotFoundException
      * @throws java.io.IOException
      */
     public static void main(String[] args) throws SlickException, FileNotFoundException, IOException {
-        
+
         game = new Medrun("Medrun");
         app = new AppGameContainer(new ScalableGame(game, width, height, false));
         app.setDisplayMode(gameWidth, gameHeight, fullScreen);
@@ -114,8 +118,10 @@ public class Medrun extends StateBasedGame {
     }
 
     /**
+     * This function will initiate all the states that the game will use.
      *
-     * @param gc The game container, see Slick2d documentation for more information.
+     * @param gc The game container, see Slick2d documentation for more
+     * information.
      * @throws org.newdawn.slick.SlickException
      */
     @Override
@@ -130,8 +136,10 @@ public class Medrun extends StateBasedGame {
     }
 
     /**
-     * The settings.ini file will be read using this function.
-     * All the parameteres will then be loaded into variables in this class and will be used throughout the game. 
+     * The settings.ini file will be read using this function. All the
+     * parameters will then be loaded into variables in this class and will be
+     * used throughout the game.
+     *
      * @throws java.io.IOException
      */
     public static void readSettings() throws IOException {
@@ -186,7 +194,7 @@ public class Medrun extends StateBasedGame {
             } else if (line.startsWith("iMinimumLogicUpdateInterval")) {
                 minUpdateTime = Integer.parseInt(line.substring(line.indexOf("=") + 1).toLowerCase().trim());
             } else if (line.startsWith("iDifficulty")) {
-                difficulty = 1 + ((Integer.parseInt(line.substring(line.indexOf("=") + 1).toLowerCase().trim())) - 1 )/2; // a 1 represents 1, a 2 represents 1.5, a 3 is 2, and so on.  
+                difficulty = 1 + ((Integer.parseInt(line.substring(line.indexOf("=") + 1).toLowerCase().trim())) - 1) / 2; // a 1 represents 1, a 2 represents 1.5, a 3 is 2, and so on.  
             } else if (line.startsWith("bSMute")) {
                 switch (line.substring(line.indexOf("=") + 1).toLowerCase().trim()) {
                     case "true":
@@ -267,133 +275,283 @@ public class Medrun extends StateBasedGame {
 
     }
 
+    /**
+     * Returns true if the game is in full-screen.
+     *
+     * @return a boolean that is true if the game is in full screen mode,
+     * otherwise it will be false.
+     */
     public static boolean isFullScreen() {
         return fullScreen;
     }
 
+    /**
+     * Sets the game to either full screen or windowed screen depending on the
+     * boolean input variable.
+     *
+     * @param fullScreen the boolean to set the fullScreen variable to.
+     * @throws SlickException
+     */
     public static void setFullScreen(boolean fullScreen) throws SlickException {
         Medrun.fullScreen = fullScreen;
         app.setFullscreen(fullScreen);
     }
 
+    /**
+     * Returns true if the game has V-sync activated
+     *
+     * @return a boolean representing the current v-sync state. True means on,
+     * false means off.
+     */
     public static boolean isvSync() {
         return vSync;
     }
 
+    /**
+     * Sets the current v-sync state to the input boolean.
+     *
+     * @param vSync the input boolean to set the vSync variable to.
+     */
     public static void setvSync(boolean vSync) {
         Medrun.vSync = vSync;
         app.setVSync(vSync);
     }
 
+    /**
+     * Returns true if the FPS counter is currently displayed on screen.
+     *
+     * @return a boolean representing the current FPS counter state. true means
+     * on, false means off.
+     */
     public static boolean isDisplayFPS() {
         return displayFPS;
     }
 
+    /**
+     * sets the displayFPS to the input boolean.
+     *
+     * @param displayFPS the boolean to set the displayFPS variable to.
+     */
     public static void setDisplayFPS(boolean displayFPS) {
         Medrun.displayFPS = displayFPS;
         app.setShowFPS(vSync);
     }
 
+    /**
+     * returns the width of the window that the game is displayed in.
+     *
+     * @return an integer representing the current width of the game window.
+     */
     public static int getGameWidth() {
         return gameWidth;
     }
 
+    /**
+     * sets the game window width to the input integer.
+     *
+     * @param gameWidth the integer to set the window width variable to.
+     */
     public static void setGameWidth(int gameWidth) throws SlickException {
         Medrun.gameWidth = gameWidth;
         app.setDisplayMode(gameWidth, gameHeight, fullScreen);
     }
 
+    /**
+     * returns the height of the window that the game is displayed in.
+     *
+     * @return an integer representing the current height of the game window.
+     */
     public static int getGameHeight() {
         return gameHeight;
     }
 
+    /**
+     * sets the game window height to the input integer.
+     *
+     * @param gameHeight the integer to set the window height variable to.
+     */
     public static void setGameHeight(int gameHeight) throws SlickException {
         Medrun.gameHeight = gameHeight;
         app.setDisplayMode(gameWidth, gameHeight, fullScreen);
     }
 
+    /**
+     * Returns the current target framerate that the game uses to limit the
+     * frames per seconds to.
+     *
+     * @return an integer representing the current target framerate.
+     */
     public static int getTargetFramerate() {
         return targetFramerate;
     }
 
+    /**
+     * Sets the current target framerate to the input integer.
+     *
+     * @param targetFramerate the integer to set the target framerate to.
+     */
     public static void setTargetFramerate(int targetFramerate) {
         Medrun.targetFramerate = targetFramerate;
         app.setTargetFrameRate(targetFramerate);
     }
 
+    /**
+     * Returns the minimum update time that the game uses to limit the number of
+     * updated per frame. if the games updates faster than the
+     * minimum update time the game will limit the updates to that time.
+     *
+     * @return an integer representing the current minimum update time in milliseconds.
+     */
     public static int getMinUpdateTime() {
         return minUpdateTime;
     }
 
+    /**
+     * Sets the current minimum update time to the input integer.
+     *
+     * @param minUpdateTime the integer to set the target minimum update time to.
+     */
     public static void setMinUpdateTime(int minUpdateTime) {
         Medrun.minUpdateTime = minUpdateTime;
         app.setMinimumLogicUpdateInterval(minUpdateTime);
     }
 
+    /**
+     * Returns the current game difficulty.
+     * @return a float representing the current difficulty.
+     */
     public static float getDifficulty() {
         return difficulty;
     }
 
+    /**
+     * Sets the current difficulty to the input integer value.
+     * @param difficulty the integer to set the difficulty to.
+     */
     public static void setDifficulty(int difficulty) {
         Medrun.difficulty = difficulty;
     }
 
+    /**
+     * Renders the input animation at the input position as center, using the input scale to scale the animation.
+     * @param anim the animation to render.
+     * @param x the x position to render at.
+     * @param y the y position to render at.
+     * @param scale the scale to use when rendering.
+     */
     public static void renderScaledCenter(Animation anim, int x, int y, float scale) {
         anim.draw(x - 20 - anim.getWidth() * scale / 2, y - anim.getHeight() * scale / 2, anim.getWidth() * scale, anim.getHeight() * scale);
     }
 
+    /**
+     * Renders the input image at the input position as center, using the input scale to scale the image.
+     * @param image the image to render.
+     * @param x the x position to render at.
+     * @param y the y position to render at.
+     * @param scale the scale to use when rendering.
+     */
     public static void renderScaledCenter(Image image, int x, int y, float scale) {
         image.draw(x - 20 - image.getWidth() * scale / 2, y - image.getHeight() * scale / 2, image.getWidth() * scale, image.getHeight() * scale);
     }
-    
+
+    /**
+     * Renders the input string using the input font at the input position as center.
+     * @param font the font to use for the text render.
+     * @param whatChars the string that represents the text to render.
+     * @param x the x position to render at.
+     * @param y the y position to render at.
+     */
     public static void renderCenterdText(TrueTypeFont font, String whatChars, int x, int y) {
         font.drawString(x - 23 - font.getWidth(whatChars) / 2, y - font.getHeight() / 2, whatChars);
     }
-    
+
+    /**
+     * Renders the input string using the input font at the input position as center. Uses the input color as the color to render the text.
+     * @param font the font to use for the text render.
+     * @param whatChars the string that represents the text to render.
+     * @param x the x position to render at.
+     * @param y the y position to render at.
+     * @param color the color the text will be rendered width.
+     */
     public static void renderCenterdText(TrueTypeFont font, String whatChars, int x, int y, Color color) {
         font.drawString(x - 23 - font.getWidth(whatChars) / 2, y - font.getHeight() / 2, whatChars, color);
     }
 
+    /**
+     * Returns the pseudo width of the window that the game elements will be using as render positions.
+     * @return an integer representing the pseudo width.
+     */
     public static int getWidth() {
         return width;
     }
-
+    /**
+     * Returns the pseudo height of the window that the game elements will be using as render positions.
+     * @return an integer representing the pseudo height.
+     */
     public static int getHeight() {
         return height;
     }
 
+    /**
+     * Returns true if the sound is currently muted. Otherwise it returns false.
+     * @return a boolean representing the current muted state.
+     */
     public static boolean isSoundMuted() {
         return soundMuted;
     }
 
+    /**
+     * Sets the muted variable to the input boolean.
+     * @param soundMuted  the boolean to set the muted variable to.
+     */
     public static void setSoundMuted(boolean soundMuted) {
         Medrun.soundMuted = soundMuted;
     }
 
+    /**
+     * Returns the soundMaster variable which is used to set the sound volume.
+     * @return the current soundMaster setting as an integer.
+     */
     public static int getSoundMaster() {
         return soundMaster;
     }
-
+    /**
+     * Sets the soundMaster variable to the input integer.
+     * @param soundMaster  the integer to set the soundMaster variable to.
+     */
     public static void setSoundMaster(int soundMaster) {
         Medrun.soundMaster = soundMaster;
         MusicPlayer.setMusicVolume();
     }
-
+    /**
+     * Returns the soundEffects variable which is used to set the effects volume.
+     * @return the current soundEffects setting as an integer.
+     */
     public static int getSoundEffects() {
         return soundEffects;
     }
 
+    /**
+     * Sets the soundEffects variable to the input integer.
+     * @param soundEffects  the integer to set the soundEffects variable to.
+     */
     public static void setSoundEffects(int soundEffects) {
         Medrun.soundEffects = soundEffects;
     }
-
+    /**
+     * Returns the soundMusic variable which is used to set the music volume.
+     * @return the current soundMusic setting as an integer.
+     */
     public static int getSoundMusic() {
         return soundMusic;
     }
-
+    /**
+     * Sets the soundMusic variable to the input integer.
+     * @param soundMusic  the integer to set the soundMusic variable to.
+     */
     public static void setSoundMusic(int soundMusic) {
         Medrun.soundMusic = soundMusic;
         MusicPlayer.setMusicVolume();
     }
-    
+
 }

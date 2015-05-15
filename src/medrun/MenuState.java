@@ -19,7 +19,7 @@ import org.newdawn.slick.state.StateBasedGame;
  *
  * @author Tom Axblad
  */
-class MenuState extends State {
+public class MenuState extends State {
 
     Input input;
     Button[] buttons;

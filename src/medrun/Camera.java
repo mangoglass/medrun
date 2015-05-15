@@ -6,8 +6,10 @@
 package medrun;
 
 /**
+ * The camera object is the object that decides how the world will transform in
+ * relation to the players position.
  *
- * @author Admin
+ * @author Tom Axblad
  */
 public class Camera {
 
@@ -28,12 +30,29 @@ public class Camera {
 
     public static boolean started;
 
+    /**
+     * The constructor for the Camera object, creates a camera object and sets
+     * objects variables accordingly.
+     */
     public Camera() {
         started = false;
         xAcc = 3;
         yAcc = 0;
     }
 
+    /**
+     * The update function for the camera object. The camera objects moves in
+     * relation to the player position, the time that the game has been running
+     * for. And the deltaRation, a variable representing the amount of change
+     * between this frame and the last frame.This function will run every frame.
+     *
+     * @param gameTime a variable representing the time the game has been
+     * running for measured in milliseconds.
+     * @param deltaRatio the variable representing the amount of change between
+     * this frame and the last frame.
+     * @param player the player object that is checked to move the camera to the
+     * right positions at the right time.
+     */
     public void update(int gameTime, float deltaRatio, Player player) {
 
         if (gameTime > 2000 && !started) {

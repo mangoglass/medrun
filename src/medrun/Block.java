@@ -37,6 +37,13 @@ public class Block implements Renderable {
     int x;
     int y;
 
+    public Block(String ref) throws SlickException {
+        this.x = 0;
+        this.y = 0;
+        this.type = 0;
+        this.tiledMap = new TiledMap(ref);
+    }
+    
     /**
      * The constructor for the Block Class.
      *
@@ -126,14 +133,28 @@ public class Block implements Renderable {
         return tiledMap.getWidth() * TILEWIDTH;
     }
 
+    /** 
+     * Returns the height of the block in pixels.
+     * @return an int representing the height.
+     */
     public int getHeight() {
         return tiledMap.getHeight() * TILEHEIGHT;
     }
 
+    /**
+     * Returns true if the position inputed is inside the block.
+     * @param pos the position to check.
+     * @return
+     */
     public boolean inBlock(float[] pos) {
         return (pos[X] > this.x && pos[X] < this.x + this.getWidth() && pos[Y] > this.y && pos[Y] < this.y + this.getHeight()); // pos[X] is the x value for the input, pos[Y] is the y value. If all is true, you're in the block.
     }
 
+    /**
+     * Returns true if the tile that the inputed position represents is a collision tile and hasn't got another collision block to the left.
+     * @param pos the position to represent the tile. It has to be inside the tile to represent it.
+     * @return
+     */
     public boolean isLeftmostTile(float[] pos) { // returns true if the tile to the left of this one isn't a cloission block.
         int[] tilePos = getTileMapPos(getTilePixelPos(pos));
         if (tilePos[X] == 0) {
@@ -143,6 +164,11 @@ public class Block implements Renderable {
         }
     }
 
+    /**
+     * Returns true if the tile that the inputed position represents is a collision tile and hasn't got another collision block to the right.
+     * @param pos the position to represent the tile. It has to be inside the tile to represent it.
+     * @return
+     */
     public boolean isRightmostTile(float[] pos) { // returns true if the tile to the right of this one isn't a cloission block.
         int[] tilePos = getTileMapPos(getTilePixelPos(pos));
         if (tilePos[X] == this.tiledMap.getWidth()) {
@@ -156,7 +182,12 @@ public class Block implements Renderable {
             }
         }
     }
-
+    
+    /**
+     * Returns true if the tile that the inputed position represents is a collision tile and hasn't got another collision block over it
+     * @param pos the position to represent the tile. It has to be inside the tile to represent it.
+     * @return
+     */
     public boolean isTopTile(float[] pos) { // returns true if the tile above this one isn't a cloission block.
         int[] tilePos = getTileMapPos(getTilePixelPos(pos));
         if (tilePos[Y] == 0) {
@@ -170,7 +201,12 @@ public class Block implements Renderable {
             }
         }
     }
-
+    
+    /**
+     * Returns true if the tile that the inputed position represents is a collision tile and hasn't got another collision under it.
+     * @param pos the position to represent a tile. It has to be inside the tile to represent it.
+     * @return
+     */
     public boolean isBottomTile(float[] pos) { // returns true if the tile below a cloission block.
         int[] tilePos = getTileMapPos(getTilePixelPos(pos));
         if (tilePos[Y] == this.tiledMap.getHeight()) {
@@ -185,10 +221,18 @@ public class Block implements Renderable {
         }
     }
 
+    /**
+     * Returns true if the tile that the input position is in is a collision tile.
+     * @param pos the position to represent a tile. It has to be inside the tile to represent it.
+     * @return
+     */
     public boolean isColliding(float[] pos) {
         int[] block = {
-            (int) ((pos[X] - (float) this.x - (pos[X] - (float) this.x) % (float) TILEWIDTH) / (float) TILEWIDTH), // the input x position subtracted with the blocks x position subtracted with the distance to the nearest tiles' x value, this becomes the x position of the nearest tile in pixels, lastly we divide by the pixel width of one tile.
-            (int) ((pos[Y] - (float) this.y - (pos[Y] - (float) this.y) % (float) TILEHEIGHT) / (float) TILEHEIGHT) // the same as above, but with the y positions.
+            (int) ((pos[X] - (float) this.x - (pos[X] - (float) this.x) % (float) TILEWIDTH) / (float) TILEWIDTH), 
+            /* the input x position subtracted with the blocks x position subtracted with the distance to the nearest tiles' x value. 
+            This becomes the x position of the nearest tile in pixels, lastly we divide by the pixel width of one tile to get an int index representing the tile in the x-axis. */
+            (int) ((pos[Y] - (float) this.y - (pos[Y] - (float) this.y) % (float) TILEHEIGHT) / (float) TILEHEIGHT) 
+            // the same as above, but with the y positions.
         };
         if (block[X] < 0 || block[X] > this.tiledMap.getWidth() - 1 || block[Y] < 0 || block[Y] > this.tiledMap.getHeight() - 1) {
             return false;
@@ -197,6 +241,11 @@ public class Block implements Renderable {
         }
     }
 
+    /**
+     *  Returns an array containing two floats representing the pixel position of a tile that the input position resides in.
+     * @param pos the position to represent a tile. It has to be inside the tile to represent it.
+     * @return the array to represent the position of the tile.
+     */
     public float[] getTilePixelPos(float[] pos) {
         return new float[]{
             (pos[X] - (pos[X] - (float) this.x) % (float) this.tiledMap.getTileWidth()),
@@ -212,9 +261,9 @@ public class Block implements Renderable {
     }
 
     /**
-     *
-     * @param pos The input position that we use.
-     * @return
+     * Returns true if the x-value of the input position is within the position of this block.
+     * @param pos The input position that we check.
+     * @return a boolean representing the answer.
      */
     public boolean inXRangeOfBlock(float[] pos) {
         return pos[X] > this.x && pos[X] < this.x + this.getWidth();

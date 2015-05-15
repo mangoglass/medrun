@@ -16,7 +16,7 @@ import org.newdawn.slick.state.StateBasedGame;
  *
  * @author Tom Axblad
  */
-class AchieveState extends State {
+public class AchieveState extends State {
 
     public AchieveState(int stateID) {
         super(stateID);
