@@ -1,68 +1,25 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
+
 package medrun;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.newdawn.slick.Input;
 
 /**
  *
- * @author Admin
+ * @author Tom Axblad
  */
 public class PlayerTest {
+    
+    static Player instance;
     
     public PlayerTest() {
     }
     
     @BeforeClass
     public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
-
-    /**
-     * Test of update method, of class Player.
-     */
-    @Test
-    public void testUpdate() {
-        System.out.println("update");
-        int delta = 0;
-        float deltaRatio = 0.0F;
-        Input input = null;
-        Player instance = null;
-        instance.update(delta, deltaRatio, input);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of render method, of class Player.
-     */
-    @Test
-    public void testRender() {
-        System.out.println("render");
-        Player instance = null;
-        instance.render();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        instance = new Player(0,0,true);
     }
 
     /**
@@ -71,70 +28,25 @@ public class PlayerTest {
     @Test
     public void testDie() {
         System.out.println("die");
-        float[] pos = null;
+        float[] pos = {0,0};
         boolean onGround = false;
-        Player instance = null;
         instance.die(pos, onGround);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        boolean expResult = true;
+        boolean result = instance.dead;
+        assertEquals(expResult, result);
     }
 
     /**
      * Test of setOnGround method, of class Player.
      */
     @Test
-    public void testSetOnGround_0args() {
+    public void testSetOnGround() {
         System.out.println("setOnGround");
-        Player instance = null;
+        instance.onGround = false;
         instance.setOnGround();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setOnGround method, of class Player.
-     */
-    @Test
-    public void testSetOnGround_3args() {
-        System.out.println("setOnGround");
-        float[] pos = null;
-        Block block = null;
-        boolean leftPos = false;
-        Player instance = null;
-        instance.setOnGround(pos, block, leftPos);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setBelowRoof method, of class Player.
-     */
-    @Test
-    public void testSetBelowRoof() {
-        System.out.println("setBelowRoof");
-        float[] pos = null;
-        Block block = null;
-        Player instance = null;
-        instance.setBelowRoof(pos, block);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of groundCheck method, of class Player.
-     */
-    @Test
-    public void testGroundCheck() {
-        System.out.println("groundCheck");
-        Block block = null;
-        float[] botLeft = null;
-        float[] botRight = null;
-        int lastBlockIndex = 0;
-        int index = 0;
-        Player instance = null;
-        instance.groundCheck(block, botLeft, botRight, lastBlockIndex, index);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        boolean expResult = true;
+        boolean result = instance.onGround;
+        assertEquals(expResult, result);
     }
 
     /**
@@ -143,11 +55,9 @@ public class PlayerTest {
     @Test
     public void testGetMaxJumpHeight() {
         System.out.println("getMaxJumpHeight");
-        int expResult = 0;
+        int expResult = 324;
         int result = Player.getMaxJumpHeight();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -156,12 +66,9 @@ public class PlayerTest {
     @Test
     public void testGetX() {
         System.out.println("getX");
-        Player instance = null;
-        float expResult = 0.0F;
+        float expResult = 0;
         float result = instance.getX();
         assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -170,11 +77,11 @@ public class PlayerTest {
     @Test
     public void testSetX() {
         System.out.println("setX");
-        float x = 0.0F;
-        Player instance = null;
-        instance.setX(x);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        float expResult = 10;
+        instance.setX(expResult);
+        float result = instance.x;
+        assertEquals(expResult, result, 0.0);
+        instance.x = 0;
     }
 
     /**
@@ -183,12 +90,9 @@ public class PlayerTest {
     @Test
     public void testGetY() {
         System.out.println("getY");
-        Player instance = null;
-        float expResult = 0.0F;
+        float expResult = 0;
         float result = instance.getY();
         assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -197,11 +101,11 @@ public class PlayerTest {
     @Test
     public void testSetY() {
         System.out.println("setY");
-        float y = 0.0F;
-        Player instance = null;
-        instance.setY(y);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        float expResult = 10;
+        instance.setY(expResult);
+        float result = instance.y;
+        assertEquals(expResult, result, 0.0);
+        instance.y = 0;
     }
 
     /**
@@ -210,12 +114,9 @@ public class PlayerTest {
     @Test
     public void testGetxSpeed() {
         System.out.println("getxSpeed");
-        Player instance = null;
-        float expResult = 0.0F;
+        float expResult = 0;
         float result = instance.getxSpeed();
         assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -224,11 +125,11 @@ public class PlayerTest {
     @Test
     public void testSetxSpeed() {
         System.out.println("setxSpeed");
-        float xSpeed = 0.0F;
-        Player instance = null;
-        instance.setxSpeed(xSpeed);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        float expResult = 10;
+        instance.setxSpeed(expResult);
+        float result = instance.xSpeed;
+        assertEquals(expResult, result, 0.0);
+        instance.xSpeed = 0;
     }
 
     /**
@@ -237,12 +138,9 @@ public class PlayerTest {
     @Test
     public void testGetySpeed() {
         System.out.println("getySpeed");
-        Player instance = null;
-        float expResult = 0.0F;
+        float expResult = 0;
         float result = instance.getySpeed();
         assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -251,11 +149,11 @@ public class PlayerTest {
     @Test
     public void testSetySpeed() {
         System.out.println("setySpeed");
-        float ySpeed = 0.0F;
-        Player instance = null;
-        instance.setySpeed(ySpeed);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        float expResult = 10;
+        instance.setySpeed(expResult);
+        float result = instance.ySpeed;
+        assertEquals(expResult, result, 0.0);
+        instance.ySpeed = 0;
     }
 
     /**
@@ -264,12 +162,9 @@ public class PlayerTest {
     @Test
     public void testGetxAcc() {
         System.out.println("getxAcc");
-        Player instance = null;
-        float expResult = 0.0F;
+        float expResult = 0;
         float result = instance.getxAcc();
         assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -278,11 +173,11 @@ public class PlayerTest {
     @Test
     public void testSetxAcc() {
         System.out.println("setxAcc");
-        float xAcc = 0.0F;
-        Player instance = null;
-        instance.setxAcc(xAcc);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        float expResult = 10;
+        instance.setxAcc(expResult);
+        float result = instance.xAcc;
+        assertEquals(expResult, result, 0.0);
+        instance.xAcc = 0;
     }
 
     /**
@@ -291,12 +186,9 @@ public class PlayerTest {
     @Test
     public void testGetyAcc() {
         System.out.println("getyAcc");
-        Player instance = null;
-        float expResult = 0.0F;
+        float expResult = 0;
         float result = instance.getyAcc();
         assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -305,11 +197,11 @@ public class PlayerTest {
     @Test
     public void testSetyAcc() {
         System.out.println("setyAcc");
-        float yAcc = 0.0F;
-        Player instance = null;
-        instance.setyAcc(yAcc);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        float expResult = 10;
+        instance.setyAcc(expResult);
+        float result = instance.yAcc;
+        assertEquals(expResult, result, 0.0);
+        instance.yAcc = 0;
     }
 
     /**
@@ -318,12 +210,14 @@ public class PlayerTest {
     @Test
     public void testIsOnGround() {
         System.out.println("isOnGround");
-        Player instance = null;
-        boolean expResult = false;
+        instance.onGround = true;
+        boolean expResult = true;
         boolean result = instance.isOnGround();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        instance.onGround = false;
+        expResult = false;
+        result = instance.isOnGround();
+        assertEquals(expResult, result);
     }
 
     /**
@@ -332,12 +226,13 @@ public class PlayerTest {
     @Test
     public void testIsSliding() {
         System.out.println("isSliding");
-        Player instance = null;
-        boolean expResult = false;
+        instance.sliding = true;
+        boolean expResult = true;
         boolean result = instance.isSliding();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        instance.sliding = false;
+        expResult = false;
+        result = instance.isSliding();
+        assertEquals(expResult, result);
     }
-    
 }

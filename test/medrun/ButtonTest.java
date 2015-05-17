@@ -5,38 +5,34 @@
  */
 package medrun;
 
-import java.awt.Font;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 
 /**
  *
  * @author Admin
  */
 public class ButtonTest {
-    
+
+    static Button instance;
+    String methodName;
+
     public ButtonTest() {
     }
-    
+
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUpClass() throws SlickException {
+        instance = new Button("test", 50, 50, true);
     }
-    
-    @AfterClass
-    public static void tearDownClass() {
+
+    public String errorMessage(String methodName, Object expected, Object actual) {
+        return ("Error in method " + methodName + ". Expected: " + expected + ", got: " + actual);
     }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
+
+    public int randint() {
+        return (int) (Math.random()*100);
     }
 
     /**
@@ -44,37 +40,16 @@ public class ButtonTest {
      */
     @Test
     public void testTogglePress() {
-        System.out.println("togglePress");
-        Button instance = null;
+        methodName = "togglePress";
+        System.out.println(methodName);
+        boolean expResult = false;
+        boolean result = instance.click;
+        assertEquals(errorMessage(methodName, expResult, result), expResult, result);
         instance.togglePress();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getAnimation method, of class Button.
-     */
-    @Test
-    public void testGetAnimation() {
-        System.out.println("getAnimation");
-        Button instance = null;
-        Image expResult = null;
-        Image result = instance.getAnimation();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of render method, of class Button.
-     */
-    @Test
-    public void testRender() {
-        System.out.println("render");
-        Button instance = null;
-        instance.render();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        expResult = true;
+        result = instance.click;
+        assertEquals(errorMessage(methodName, expResult, result), expResult, result);
+        instance.click = false;
     }
 
     /**
@@ -82,15 +57,13 @@ public class ButtonTest {
      */
     @Test
     public void testIsInButton() {
-        System.out.println("isInButton");
-        float x = 0.0F;
-        float y = 0.0F;
-        Button instance = null;
-        boolean expResult = false;
+        methodName = "isInButton";
+        System.out.println(methodName);
+        float x = instance.width / 2;
+        float y = instance.height / 2;
+        boolean expResult = true;
         boolean result = instance.isInButton(x, y);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(errorMessage(methodName, expResult, result), expResult, result);
     }
 
     /**
@@ -98,13 +71,11 @@ public class ButtonTest {
      */
     @Test
     public void testGetTitle() {
-        System.out.println("getTitle");
-        Button instance = null;
-        String expResult = "";
+        methodName = "getTitle";
+        System.out.println(methodName);
+        String expResult = "test";
         String result = instance.getTitle();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(errorMessage(methodName, expResult, result), expResult, result);
     }
 
     /**
@@ -112,39 +83,13 @@ public class ButtonTest {
      */
     @Test
     public void testSetTitle() {
-        System.out.println("setTitle");
-        String title = "";
-        Button instance = null;
-        instance.setTitle(title);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getFont method, of class Button.
-     */
-    @Test
-    public void testGetFont() {
-        System.out.println("getFont");
-        Button instance = null;
-        Font expResult = null;
-        Font result = instance.getFont();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setFont method, of class Button.
-     */
-    @Test
-    public void testSetFont() {
-        System.out.println("setFont");
-        Font font = null;
-        Button instance = null;
-        instance.setFont(font);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        methodName = "setTitle";
+        System.out.println(methodName);
+        String expResult = "testing";
+        instance.setTitle(expResult);
+        String result = instance.title;
+        assertEquals(errorMessage(methodName, expResult, result), expResult, result);
+        instance.title = "test";
     }
 
     /**
@@ -152,13 +97,11 @@ public class ButtonTest {
      */
     @Test
     public void testGetX() {
-        System.out.println("getX");
-        Button instance = null;
-        float expResult = 0.0F;
+        methodName = "getX";
+        System.out.println(methodName);
+        float expResult = 50;
         float result = instance.getX();
-        assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(errorMessage(methodName, expResult, result), expResult, result, 0.0);
     }
 
     /**
@@ -166,12 +109,13 @@ public class ButtonTest {
      */
     @Test
     public void testSetX() {
-        System.out.println("setX");
-        float x = 0.0F;
-        Button instance = null;
-        instance.setX(x);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        methodName = "setX";
+        System.out.println(methodName);
+        float expResult = randint();
+        instance.setX(expResult);
+        float result = instance.x;
+        assertEquals(errorMessage(methodName, expResult, result), expResult, result, 0.0);
+        instance.x = 50;
     }
 
     /**
@@ -179,13 +123,11 @@ public class ButtonTest {
      */
     @Test
     public void testGetY() {
-        System.out.println("getY");
-        Button instance = null;
-        float expResult = 0.0F;
+        methodName = "getY";
+        System.out.println(methodName);
+        float expResult = 50;
         float result = instance.getY();
-        assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(errorMessage(methodName, expResult, result), expResult, result, 0.0);
     }
 
     /**
@@ -193,12 +135,13 @@ public class ButtonTest {
      */
     @Test
     public void testSetY() {
-        System.out.println("setY");
-        float y = 0.0F;
-        Button instance = null;
-        instance.setY(y);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        methodName = "setY";
+        System.out.println(methodName);
+        float expResult = randint();
+        instance.setY(expResult);
+        float result = instance.y;
+        assertEquals(errorMessage(methodName, expResult, result), expResult, result, 0.0);
+        instance.y = 50;
     }
 
     /**
@@ -206,13 +149,11 @@ public class ButtonTest {
      */
     @Test
     public void testGetWidth() {
-        System.out.println("getWidth");
-        Button instance = null;
-        float expResult = 0.0F;
+        methodName = "getWidth";
+        System.out.println(methodName);
+        float expResult = 100;
         float result = instance.getWidth();
-        assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(errorMessage(methodName, expResult, result), expResult, result, 0.0);
     }
 
     /**
@@ -220,12 +161,13 @@ public class ButtonTest {
      */
     @Test
     public void testSetWidth() {
-        System.out.println("setWidth");
-        float width = 0.0F;
-        Button instance = null;
-        instance.setWidth(width);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        methodName = "setWidth";
+        System.out.println(methodName);
+        float expResult = randint();
+        instance.setWidth(expResult);
+        float result = instance.width;
+        assertEquals(errorMessage(methodName, expResult, result), expResult, result, 0.0);
+        instance.width = 100;
     }
 
     /**
@@ -233,13 +175,11 @@ public class ButtonTest {
      */
     @Test
     public void testGetHeight() {
-        System.out.println("getHeight");
-        Button instance = null;
-        float expResult = 0.0F;
+        methodName = "getHeight";
+        System.out.println(methodName);
+        float expResult = 100;
         float result = instance.getHeight();
-        assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(errorMessage(methodName, expResult, result), expResult, result, 0.0);
     }
 
     /**
@@ -247,12 +187,13 @@ public class ButtonTest {
      */
     @Test
     public void testSetHeight() {
-        System.out.println("setHeight");
-        float height = 0.0F;
-        Button instance = null;
-        instance.setHeight(height);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        methodName = "setHeight";
+        System.out.println(methodName);
+        float expResult = randint();
+        instance.setHeight(expResult);
+        float result = instance.height;
+        assertEquals(errorMessage(methodName, expResult, result), expResult, result, 0.0);
+        instance.height = 100;
     }
 
     /**
@@ -260,13 +201,11 @@ public class ButtonTest {
      */
     @Test
     public void testIsClick() {
-        System.out.println("isClick");
-        Button instance = null;
+        methodName = "isClick";
+        System.out.println(methodName);
         boolean expResult = false;
         boolean result = instance.isClick();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(errorMessage(methodName, expResult, result), expResult, result);
     }
 
     /**
@@ -274,12 +213,13 @@ public class ButtonTest {
      */
     @Test
     public void testSetClick() {
-        System.out.println("setClick");
-        boolean click = false;
-        Button instance = null;
-        instance.setClick(click);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        methodName = "setClick";
+        System.out.println(methodName);
+        boolean expResult = true;
+        instance.setClick(expResult);
+        boolean result = instance.click;
+        assertEquals(errorMessage(methodName, expResult, result), expResult, result);
+        instance.click = false;
     }
-    
+
 }

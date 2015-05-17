@@ -108,10 +108,17 @@ public class Medrun extends StateBasedGame {
 
         game = new Medrun("Medrun");
         app = new AppGameContainer(new ScalableGame(game, width, height, false));
-        app.setDisplayMode(gameWidth, gameHeight, fullScreen);
+        try{
+            app.setDisplayMode(gameWidth, gameHeight, fullScreen);
+        }
+        catch(SlickException e){
+            System.out.println("\nERROR\nerror in settings.ini\niWidth and/or iHeight holds invalid values, only resolutions compatible with your screen is allowed.\n");
+            app.setDisplayMode(displayWidth / 2, displayHeight / 2, false);
+        }
         app.setShowFPS(displayFPS);
         app.setTargetFrameRate(targetFramerate);
         app.setVSync(vSync);
+        app.setUpdateOnlyWhenVisible(true);
         app.setMinimumLogicUpdateInterval(minUpdateTime);
         app.start();
         game.enterState(SPLASH);

@@ -5,49 +5,40 @@
  */
 package medrun;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.newdawn.slick.Music;
+import org.newdawn.slick.SlickException;
 
 /**
  *
  * @author Admin
  */
 public class MusicPlayerTest {
-    
+
+    static MusicPlayer instance;
+
     public MusicPlayerTest() {
     }
-    
+
     @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
+    public static void setUpClass() throws SlickException {
+        instance = new MusicPlayer("test/testMusic.aif");
     }
 
     /**
      * Test of changeMusic method, of class MusicPlayer.
+     * @throws org.newdawn.slick.SlickException
      */
     @Test
-    public void testChangeMusic() throws Exception {
+    public void testChangeMusic() throws SlickException {
         System.out.println("changeMusic");
-        String ref = "";
-        MusicPlayer.changeMusic(ref);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        String expResult = "testMusic2.aif";
+        MusicPlayer.changeMusic(expResult);
+        String result = MusicPlayer.ref;
+        assertEquals(expResult, result);
+        MusicPlayer.ref = "testMusic.aif";
     }
 
     /**
@@ -56,11 +47,9 @@ public class MusicPlayerTest {
     @Test
     public void testGetMusic() {
         System.out.println("getMusic");
-        Music expResult = null;
+        Music expResult = MusicPlayer.music;
         Music result = MusicPlayer.getMusic();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -70,8 +59,8 @@ public class MusicPlayerTest {
     public void testPlay() {
         System.out.println("play");
         MusicPlayer.play();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        MusicPlayer.music.pause();
+        MusicPlayer.music.setPosition(0);
     }
 
     /**
@@ -81,8 +70,6 @@ public class MusicPlayerTest {
     public void testPause() {
         System.out.println("pause");
         MusicPlayer.pause();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -92,8 +79,6 @@ public class MusicPlayerTest {
     public void testStop() {
         System.out.println("stop");
         MusicPlayer.stop();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -102,11 +87,9 @@ public class MusicPlayerTest {
     @Test
     public void testGetRef() {
         System.out.println("getRef");
-        String expResult = "";
+        String expResult = "testMusic.aif";
         String result = MusicPlayer.getRef();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -118,8 +101,6 @@ public class MusicPlayerTest {
         boolean expResult = false;
         boolean result = MusicPlayer.isMuted();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -128,21 +109,11 @@ public class MusicPlayerTest {
     @Test
     public void testSetMuted() {
         System.out.println("setMuted");
-        boolean muted = false;
-        MusicPlayer.setMuted(muted);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setMusicVolume method, of class MusicPlayer.
-     */
-    @Test
-    public void testSetMusicVolume() {
-        System.out.println("setMusicVolume");
-        MusicPlayer.setMusicVolume();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        boolean expResult = true;
+        MusicPlayer.setMuted(expResult);
+        boolean result = MusicPlayer.muted;
+        assertEquals(expResult, result);
+        MusicPlayer.muted = false;
     }
 
     /**
@@ -151,9 +122,11 @@ public class MusicPlayerTest {
     @Test
     public void testRestart() {
         System.out.println("restart");
+        MusicPlayer.music.setPosition(10);
+        if(MusicPlayer.music.playing()){
+            MusicPlayer.music.pause();
+        }
         MusicPlayer.restart();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(0, MusicPlayer.music.getPosition(), 0.0f);
     }
-    
 }

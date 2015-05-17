@@ -78,6 +78,32 @@ public class Player implements Renderable {
     }
 
     /**
+     * The player test constructor that is used to test the player class.
+     *
+     * @param x What x-value the player will start at.
+     * @param y What y-value the player will start at.
+     * @param test separates this constructor from the previous.
+     */
+    public Player(float x, float y, boolean test) {
+        this.x = x;
+        this.y = y;
+        xSpeed = 0;
+        ySpeed = 0;
+        xAcc = 0;
+        yAcc = 0;
+        slidePressTime = 0;
+        slidePause = 0;
+        onGround = false;
+        jumpButtonReleased = false;
+        controlable = true;
+        slideButtonReleased = false;
+        dead = false;
+        foundOverBlock = false;
+        jumpMultiplier = 1;
+        speedDif = 0;
+    }
+
+    /**
      * The update method for the player. This updater will run once every frame.
      *
      * @param delta The time between this frame and the last measured in

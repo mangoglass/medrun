@@ -63,7 +63,25 @@ public class Button implements Renderable {
         } catch (Exception e) {
         }
     }
-
+    /**
+     * The test constructor for the button. Takes in a String input to represent the
+     * text that will be rendered in the button.
+     *
+     * @param title the string representation for the text.
+     * @param test separates the two constructors.
+     * @throws SlickException
+     */
+    public Button(String title, int x, int y, boolean test) throws SlickException {
+        click = false;
+        this.title = title;
+        unclicked = null;
+        clicked = null;
+        width = 100;
+        height = 100;
+        image = null;
+        this.x = x;
+        this.y = y;
+    }
     /**
      * The constructor for the button. Takes in a String input to represent the
      * text that will be rendered in the button. Also takes in two integer
@@ -123,11 +141,7 @@ public class Button implements Renderable {
     public boolean isInButton(float x, float y) {
         float startX = this.x - width / 2; // hämtar det x-värde som är längst till vänster.
         float startY = this.y - height / 2; // hämtar det y-värde som är längst upp.
-        if (x > startX && x < startX + this.width && y > startY && y < startY + this.height) {
-            return true;
-        } else {
-            return false;
-        }
+        return x > startX && x < startX + this.width && y > startY && y < startY + this.height;
     }
 
     /**

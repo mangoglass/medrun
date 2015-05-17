@@ -5,20 +5,13 @@
  */
 package medrun;
 
-import java.util.ArrayList;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.state.StateBasedGame;
 
 /**
- *
- * @author Admin
+ * Tests for the non IO gameState class methods.
+ * @author Tom Axblad
  */
 public class GameStateTest {
     
@@ -27,104 +20,11 @@ public class GameStateTest {
     
     @BeforeClass
     public static void setUpClass() {
+        GameState.testInit();
     }
     
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
-
-    /**
-     * Test of enter method, of class GameState.
-     */
-    @Test
-    public void testEnter() throws Exception {
-        System.out.println("enter");
-        GameContainer gc = null;
-        StateBasedGame sbg = null;
-        GameState instance = null;
-        instance.enter(gc, sbg);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of leave method, of class GameState.
-     */
-    @Test
-    public void testLeave() throws Exception {
-        System.out.println("leave");
-        GameContainer gc = null;
-        StateBasedGame sbg = null;
-        GameState instance = null;
-        instance.leave(gc, sbg);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of init method, of class GameState.
-     */
-    @Test
-    public void testInit() throws Exception {
-        System.out.println("init");
-        GameContainer gc = null;
-        StateBasedGame sbg = null;
-        GameState instance = null;
-        instance.init(gc, sbg);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of render method, of class GameState.
-     */
-    @Test
-    public void testRender() throws Exception {
-        System.out.println("render");
-        GameContainer gc = null;
-        StateBasedGame sbg = null;
-        Graphics grphcs = null;
-        GameState instance = null;
-        instance.render(gc, sbg, grphcs);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of update method, of class GameState.
-     */
-    @Test
-    public void testUpdate() throws Exception {
-        System.out.println("update");
-        GameContainer gc = null;
-        StateBasedGame sbg = null;
-        int delta = 0;
-        GameState instance = null;
-        instance.update(gc, sbg, delta);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getBlockVaryingHeight method, of class GameState.
-     */
-    @Test
-    public void testGetBlockVaryingHeight() {
-        System.out.println("getBlockVaryingHeight");
-        GameState instance = null;
-        float expResult = 0.0F;
-        float result = instance.getBlockVaryingHeight();
-        assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public int randint() {
+        return (int) (Math.random()*100);
     }
 
     /**
@@ -133,11 +33,9 @@ public class GameStateTest {
     @Test
     public void testGetTranslatedX() {
         System.out.println("getTranslatedX");
-        float expResult = 0.0F;
+        float expResult = 0;
         float result = GameState.getTranslatedX();
         assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -146,10 +44,11 @@ public class GameStateTest {
     @Test
     public void testSetTranslatedX() {
         System.out.println("setTranslatedX");
-        float translatedX = 0.0F;
-        GameState.setTranslatedX(translatedX);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        float expResult = randint();
+        GameState.setTranslatedX(expResult);
+        float result = GameState.translatedX;
+        assertEquals(expResult, result, 0.0);
+        GameState.translatedX = 0;
     }
 
     /**
@@ -158,11 +57,9 @@ public class GameStateTest {
     @Test
     public void testGetTranslatedY() {
         System.out.println("getTranslatedY");
-        float expResult = 0.0F;
+        float expResult = 0;
         float result = GameState.getTranslatedY();
         assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -171,10 +68,11 @@ public class GameStateTest {
     @Test
     public void testSetTranslatedY() {
         System.out.println("setTranslatedY");
-        float translatedY = 0.0F;
-        GameState.setTranslatedY(translatedY);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        float expResult = randint();
+        GameState.setTranslatedY(expResult);
+        float result = GameState.translatedY;
+        assertEquals(expResult, result, 0.0);
+        GameState.translatedY = 0;
     }
 
     /**
@@ -183,11 +81,9 @@ public class GameStateTest {
     @Test
     public void testGetDTranslatedX() {
         System.out.println("getDTranslatedX");
-        float expResult = 0.0F;
+        float expResult = 0;
         float result = GameState.getDTranslatedX();
         assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -196,48 +92,35 @@ public class GameStateTest {
     @Test
     public void testSetDTranslatedX() {
         System.out.println("setDTranslatedX");
-        float dTranslatedX = 0.0F;
-        GameState.setDTranslatedX(dTranslatedX);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getYdChange method, of class GameState.
-     */
-    @Test
-    public void testGetYdChange() {
-        System.out.println("getYdChange");
-        float expResult = 0.0F;
-        float result = GameState.getYdChange();
+        float expResult = randint();
+        GameState.setDTranslatedX(expResult);
+        float result = GameState.dTranslatedX;
         assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        GameState.dTranslatedX = 0;
     }
 
     /**
-     * Test of setYdChange method, of class GameState.
+     * Test of getDTranslatedY method, of class GameState.
      */
     @Test
-    public void testSetYdChange() {
-        System.out.println("setYdChange");
-        float dTranslatedY = 0.0F;
-        GameState.setYdChange(dTranslatedY);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testGetDTranslatedY() {
+        System.out.println("getDTranslatedY");
+        float expResult = 0;
+        float result = GameState.getDTranslatedY();
+        assertEquals(expResult, result, 0.0);
     }
 
     /**
-     * Test of getActiveBlocks method, of class GameState.
+     * Test of setDTranslatedY method, of class GameState.
      */
     @Test
-    public void testGetActiveBlocks() {
-        System.out.println("getActiveBlocks");
-        ArrayList<Block> expResult = null;
-        ArrayList<Block> result = GameState.getActiveBlocks();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testSetDTranslatedY() {
+        System.out.println("setDTranslatedY");
+        float expResult = randint();
+        GameState.setDTranslatedY(expResult);
+        float result = GameState.dTranslatedY;
+        assertEquals(expResult, result, 0.0);
+        GameState.dTranslatedY = 0;
     }
 
     /**
@@ -246,12 +129,9 @@ public class GameStateTest {
     @Test
     public void testGetTimeFlow() {
         System.out.println("getTimeFlow");
-        GameState instance = null;
-        float expResult = 0.0F;
-        float result = instance.getTimeFlow();
+        float expResult = 1;
+        float result = GameState.getTimeFlow();
         assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
 }

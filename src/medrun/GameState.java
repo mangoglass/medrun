@@ -25,6 +25,7 @@ public class GameState extends State {
     public static final String gameMusicRef = "data/music/gamemusic.aif";
     public static final float startX = 500;
     public static final float startY = 600;
+    public static final int lowestPoint = 100;
 
     public static int gametime;
     public static int frames;
@@ -101,6 +102,19 @@ public class GameState extends State {
             MusicPlayer.restart();
         }
     }
+    
+    public static void testInit(){
+        latestBlockX = (int) startX - 40;
+        latestBlockY = (int) startY;
+        gametime = 0;
+        frames = 0;
+        translatedX = 0;
+        translatedY = 0;
+        dTranslatedX = 0;
+        dTranslatedY = 0;
+        timeFlow = 1;
+        musicPos = 0;
+    }
 
     @Override
     public void render(GameContainer gc, StateBasedGame sbg, Graphics grphcs) throws SlickException {
@@ -127,11 +141,11 @@ public class GameState extends State {
         });
         if (latestBlockX + latestBlockWidth < translatedX + Medrun.width) { // if the latest block's right side is in the picture, we generate a new block.
             latestBlockX += latestBlockWidth + random.nextInt((int) (1 + dTranslatedX * 30)) + 200; //differates between 200 and 30 times the current speed the game is moving with
-            if (latestBlockY < 500 && player.getX() < 10000) { // if the player hasn't gottent to 10000 in the x-axis yet and the last block was over the 500 limit.
+            if (latestBlockY < lowestPoint && player.getX() < 10000) { // if the player hasn't gottent to 10000 in the x-axis yet and the last block was over the 500 limit.
                 latestBlockY += (random.nextInt((int) (80 + getBlockVaryingHeight())) - random.nextInt((int) (80 + getBlockVaryingHeight()))); // differates between +- the maximum jump height depending on how far the player has gotten.
             } else if (player.getX() < 10000) {
                 latestBlockY -= random.nextInt((int) (80 + getBlockVaryingHeight())); // differates between 0 and -600 depending on how far the player has gotten.
-            } else if (latestBlockY < 500) {
+            } else if (latestBlockY < lowestPoint) {
                 latestBlockY += (random.nextInt(Player.MAXJUMPHEIGHT - 10) - random.nextInt(Player.MAXJUMPHEIGHT) - 10); // differates between +- the maximum jump height.
             } else {
                 latestBlockY -= random.nextInt(Player.MAXJUMPHEIGHT - 10); // differates between 0 and -700
@@ -222,14 +236,14 @@ public class GameState extends State {
      * @return returns the speed that the camera currently translates in the
      * y-axis.
      */
-    public static float getYdChange() {
+    public static float getDTranslatedY() {
         return dTranslatedY;
     }
 
     /**
      * @param dTranslatedY The value to set dTranslatedY to.
      */
-    public static void setYdChange(float dTranslatedY) {
+    public static void setDTranslatedY(float dTranslatedY) {
         GameState.dTranslatedY = dTranslatedY;
     }
 
@@ -244,7 +258,7 @@ public class GameState extends State {
      * @return returns the time flow that the game currently has, a 0.5 means
      * that the game is running at 1/2 speed, 2 means x2 speed, and so on.
      */
-    public float getTimeFlow() {
+    public static float getTimeFlow() {
         return timeFlow;
     }
 }

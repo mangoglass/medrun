@@ -40,6 +40,7 @@ public class Gui implements Renderable {
         width = Medrun.width;
         height = Medrun.height;
         score = 0;
+        length = 0;
         try {
             font = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, new File("data/fonts/retro.ttf"));
             font = font.deriveFont((float) fontSize);
@@ -47,6 +48,13 @@ public class Gui implements Renderable {
         } catch (FontFormatException | IOException e) {
             System.out.println("Error in GUI.java on line 40");
         }
+    }
+    
+    public Gui(boolean test){
+        width = Medrun.width;
+        height = Medrun.height;
+        score = 0;
+        length = 0;
     }
 
     /**

@@ -29,7 +29,7 @@ public class PauseState extends State {
     public static Image pauseFrame;
     private final float PFONTSIZE = 50;
     private final float TFONTSIZE = 30;
-    private final int xMargin = 300;
+    private final int xMargin = 500;
     private final int yMargin = Medrun.height / 2 - 100;
     private final int width = Medrun.width;
     private final int height = Medrun.height;
@@ -66,6 +66,7 @@ public class PauseState extends State {
     public void render(GameContainer gc, StateBasedGame sbg, Graphics grphcs) throws SlickException {
         pauseFrame.draw(0, 0, width + 960, height + 378);
         Medrun.renderCenterdText(pfont, "PAUSED", Medrun.width / 2, yMargin, Color.white);
+        Medrun.renderCenterdText(tfont, "R - Restart game", Medrun.width / 2, yMargin + 300, Color.white);
         Medrun.renderCenterdText(tfont, "E - unpause", Medrun.width / 2 - xMargin, yMargin + 300, Color.white);
         Medrun.renderCenterdText(tfont, "ESC - Main Menu", Medrun.width / 2 + xMargin, yMargin + 300, Color.white);
     }

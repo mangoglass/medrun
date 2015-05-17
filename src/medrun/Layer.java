@@ -75,7 +75,7 @@ public class Layer implements Renderable {
      */
     public void update(float deltaRatio) {
         x += GameState.getDTranslatedX() * transitionMultiplier * deltaRatio;
-        y += GameState.getYdChange() * transitionMultiplier * deltaRatio;
+        y += GameState.getDTranslatedY() * transitionMultiplier * deltaRatio;
 
         if (GameState.translatedX - x > width / 2) { // if the camera has moved across half of the layer
             x += width / 2; // the layer will be moved half of it's width to the right.
