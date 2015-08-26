@@ -43,13 +43,13 @@ public class ButtonTest {
         methodName = "togglePress";
         System.out.println(methodName);
         boolean expResult = false;
-        boolean result = instance.click;
+        boolean result = instance.clicked;
         assertEquals(errorMessage(methodName, expResult, result), expResult, result);
         instance.togglePress();
         expResult = true;
-        result = instance.click;
+        result = instance.clicked;
         assertEquals(errorMessage(methodName, expResult, result), expResult, result);
-        instance.click = false;
+        instance.clicked = false;
     }
 
     /**
@@ -197,29 +197,29 @@ public class ButtonTest {
     }
 
     /**
-     * Test of isClick method, of class Button.
+     * Test of isClicked method, of class Button.
      */
     @Test
     public void testIsClick() {
         methodName = "isClick";
         System.out.println(methodName);
         boolean expResult = false;
-        boolean result = instance.isClick();
+        boolean result = instance.isClicked();
         assertEquals(errorMessage(methodName, expResult, result), expResult, result);
     }
 
     /**
-     * Test of setClick method, of class Button.
+     * Test of setClicked method, of class Button.
      */
     @Test
     public void testSetClick() {
         methodName = "setClick";
         System.out.println(methodName);
         boolean expResult = true;
-        instance.setClick(expResult);
-        boolean result = instance.click;
+        instance.setClicked(expResult);
+        boolean result = instance.clicked;
         assertEquals(errorMessage(methodName, expResult, result), expResult, result);
-        instance.click = false;
+        instance.clicked = false;
     }
 
 }

@@ -1,0 +1,14 @@
+1280	720
+1280	800
+1366	768
+1600	900
+1920	1080
+2048	1152
+2560	1440
+2880	1620
+3200	1800
+3840	2160
+
+
+
+resolution, framerate, difficulty, master volume, effects, music volume.

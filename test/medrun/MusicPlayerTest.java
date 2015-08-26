@@ -34,11 +34,11 @@ public class MusicPlayerTest {
     @Test
     public void testChangeMusic() throws SlickException {
         System.out.println("changeMusic");
-        String expResult = "testMusic2.aif";
+        String expResult = "test/testMusic2.aif";
         MusicPlayer.changeMusic(expResult);
         String result = MusicPlayer.ref;
         assertEquals(expResult, result);
-        MusicPlayer.ref = "testMusic.aif";
+        MusicPlayer.ref = "test/testMusic.aif";
     }
 
     /**
@@ -87,7 +87,7 @@ public class MusicPlayerTest {
     @Test
     public void testGetRef() {
         System.out.println("getRef");
-        String expResult = "testMusic.aif";
+        String expResult = "test/testMusic.aif";
         String result = MusicPlayer.getRef();
         assertEquals(expResult, result);
     }
@@ -123,10 +123,10 @@ public class MusicPlayerTest {
     public void testRestart() {
         System.out.println("restart");
         MusicPlayer.music.setPosition(10);
+        MusicPlayer.restart();
         if(MusicPlayer.music.playing()){
             MusicPlayer.music.pause();
         }
-        MusicPlayer.restart();
-        assertEquals(0, MusicPlayer.music.getPosition(), 0.0f);
+        assertEquals(0, MusicPlayer.music.getPosition(), 0.5f);
     }
 }

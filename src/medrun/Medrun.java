@@ -124,7 +124,11 @@ public class Medrun extends StateBasedGame {
      * @throws java.io.IOException
      */
     public static void main(String[] args) throws SlickException, FileNotFoundException, IOException {
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> master
         game = new Medrun("Medrun");
         app = new AppGameContainer(new ScalableGame(game, width, height, false));
         try{

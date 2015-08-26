@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite errors="0" failures="0" hostname="n167-p57.kthopen.kth.se" name="medrun.PlayerTest" skipped="0" tests="17" time="0.271" timestamp="2015-05-17T12:25:02">
+<testsuite errors="0" failures="0" hostname="n167-p57.kthopen.kth.se" name="medrun.PlayerTest" skipped="0" tests="17" time="0.269" timestamp="2015-05-17T15:06:13">
   <properties>
     <property name="netbeans.autoupdate.country" value="US" />
     <property name="nb.wait.for.caches" value="true" />
@@ -16,6 +16,7 @@
     <property name="libs.Slick.maven-pom" value="" />
     <property name="netbeans.autoupdate.version" value="1.23" />
     <property name="ant.file.type.Medrun-impl" value="file" />
+    <property name="project.license" value="gpl30" />
     <property name="javac.profile.cmd.line.arg" value="" />
     <property name="jdk.home" value="/Library/Java/JavaVirtualMachines/jdk1.8.0_11.jdk/Contents/Home" />
     <property name="libs.javac-api.src" value="" />
@@ -41,7 +42,7 @@
     <property name="user.name" value="Admin" />
     <property name="copylibs.rebase" value="true" />
     <property name="libs.swing-layout.maven-pom" value="" />
-    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner medrun.PlayerTest skipNonTests=false filtertrace=true haltOnError=false haltOnFailure=false showoutput=true outputtoformatters=true logfailedtests=true threadid=0 logtestlistenerevents=true formatter=org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,/Users/Admin/Dropbox/documents/git/Medrun/build/test/results/TEST-medrun.PlayerTest.xml crashfile=/Users/Admin/Dropbox/documents/git/Medrun/build/junitvmwatcher6757892647755803874.properties propsfile=/Users/Admin/Dropbox/documents/git/Medrun/build/junit1024558283083168099.properties" />
+    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner medrun.PlayerTest skipNonTests=false filtertrace=true haltOnError=false haltOnFailure=false showoutput=true outputtoformatters=true logfailedtests=true threadid=0 logtestlistenerevents=true formatter=org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,/Users/Admin/Dropbox/documents/git/Medrun/build/test/results/TEST-medrun.PlayerTest.xml crashfile=/Users/Admin/Dropbox/documents/git/Medrun/build/junitvmwatcher7796692161654824751.properties propsfile=/Users/Admin/Dropbox/documents/git/Medrun/build/junit6083737299116786640.properties" />
     <property name="build.classes.dir" value="build/classes" />
     <property name="netbeans.accept_license_class" value="org.netbeans.license.AcceptLicense" />
     <property name="build.sysclasspath" value="ignore" />
@@ -92,7 +93,7 @@
     <property name="libs.absolutelayout.maven-pom" value="" />
     <property name="ant.java.version" value="1.8" />
     <property name="java.library.path" value="./lib/natives" />
-    <property name="javadoc.author" value="false" />
+    <property name="javadoc.author" value="true" />
     <property name="java.util.logging.config.class" value="org.netbeans.core.startup.TopLogging" />
     <property name="libs.spring-framework400.src" value="" />
     <property name="libs.Slick.src" value="/Users/Admin/Dropbox/documents/slick/src" />
@@ -192,7 +193,6 @@
     <property name="javadoc.encoding.used" value="UTF-8" />
     <property name="dist.jar" value="dist/Medrun.jar" />
     <property name="libs.spring-framework400.maven-pom" value="" />
-    <property name="netbeans.automatic.build" value="true" />
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment" />
     <property name="ant.project.name" value="Medrun" />
     <property name="netbeans.hash.code" value="unique=NB_JAVA01fdc9aec-8810-489f-ba1e-d69175356b53_b86f60b1-a963-4116-9153-c2f738f256d5" />
@@ -215,7 +215,7 @@
     <property name="libs.javac-api.classpath" value="/Applications/NetBeans/NetBeans 8.0.app/Contents/Resources/NetBeans/java/modules/ext/nb-javac-api.jar" />
     <property name="java.version" value="1.8.0_11" />
     <property name="run.jvmargs.ide" value="" />
-    <property name="javadoc.version" value="false" />
+    <property name="javadoc.version" value="true" />
     <property name="libs.MySQLDriver.javadoc" value="" />
     <property name="org.openide.version" value="deprecated" />
     <property name="platform.java" value="/Library/Java/JavaVirtualMachines/jdk1.8.0_11.jdk/Contents/Home/jre/bin/java" />
@@ -313,24 +313,25 @@
     <property name="platform.active" value="default_platform" />
     <property name="awt.toolkit" value="sun.lwawt.macosx.LWCToolkit" />
   </properties>
-  <testcase classname="medrun.PlayerTest" name="testGetMaxJumpHeight" time="0.004" />
-  <testcase classname="medrun.PlayerTest" name="testGetX" time="0.001" />
+  <testcase classname="medrun.PlayerTest" name="testSetOnGround" time="0.002" />
+  <testcase classname="medrun.PlayerTest" name="testGetMaxJumpHeight" time="0.0" />
+  <testcase classname="medrun.PlayerTest" name="testGetX" time="0.0" />
   <testcase classname="medrun.PlayerTest" name="testSetX" time="0.001" />
-  <testcase classname="medrun.PlayerTest" name="testGetY" time="0.001" />
+  <testcase classname="medrun.PlayerTest" name="testGetY" time="0.0" />
   <testcase classname="medrun.PlayerTest" name="testSetY" time="0.0" />
   <testcase classname="medrun.PlayerTest" name="testGetxSpeed" time="0.0" />
-  <testcase classname="medrun.PlayerTest" name="testSetxSpeed" time="0.0" />
-  <testcase classname="medrun.PlayerTest" name="testGetySpeed" time="0.004" />
-  <testcase classname="medrun.PlayerTest" name="testSetOnGround" time="0.001" />
-  <testcase classname="medrun.PlayerTest" name="testSetySpeed" time="0.004" />
-  <testcase classname="medrun.PlayerTest" name="testGetxAcc" time="0.0" />
-  <testcase classname="medrun.PlayerTest" name="testSetxAcc" time="0.0" />
-  <testcase classname="medrun.PlayerTest" name="testGetyAcc" time="0.001" />
-  <testcase classname="medrun.PlayerTest" name="testSetyAcc" time="0.002" />
-  <testcase classname="medrun.PlayerTest" name="testIsOnGround" time="0.003" />
-  <testcase classname="medrun.PlayerTest" name="testIsSliding" time="0.0" />
-  <testcase classname="medrun.PlayerTest" name="testDie" time="0.011" />
-  <system-out><![CDATA[getMaxJumpHeight
+  <testcase classname="medrun.PlayerTest" name="testSetxSpeed" time="0.001" />
+  <testcase classname="medrun.PlayerTest" name="testGetySpeed" time="0.0" />
+  <testcase classname="medrun.PlayerTest" name="testSetySpeed" time="0.001" />
+  <testcase classname="medrun.PlayerTest" name="testGetxAcc" time="0.001" />
+  <testcase classname="medrun.PlayerTest" name="testSetxAcc" time="0.001" />
+  <testcase classname="medrun.PlayerTest" name="testGetyAcc" time="0.023" />
+  <testcase classname="medrun.PlayerTest" name="testSetyAcc" time="0.014" />
+  <testcase classname="medrun.PlayerTest" name="testIsOnGround" time="0.0" />
+  <testcase classname="medrun.PlayerTest" name="testIsSliding" time="0.002" />
+  <testcase classname="medrun.PlayerTest" name="testDie" time="0.002" />
+  <system-out><![CDATA[setOnGround
+getMaxJumpHeight
 getX
 setX
 getY
@@ -338,7 +339,6 @@ setY
 getxSpeed
 setxSpeed
 getySpeed
-setOnGround
 setySpeed
 getxAcc
 setxAcc
