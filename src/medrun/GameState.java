@@ -16,7 +16,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 /**
  * The GameState class is the class that contains the game. here, all the game
- * logic is updated, and all the different sprites is rendered on the screen.
+ logic is updated, and all the different spriteSheet is rendered on the screen.
  *
  * @author Tom Axblad
  */
@@ -27,7 +27,7 @@ public class GameState extends State {
     public static final float startY = 600;
     public static final int lowestPoint = 100;
 
-    public static int gametime;
+    public static int gameTime;
     public static int frames;
     public static Player player;
     public static Camera camera;
@@ -41,6 +41,7 @@ public class GameState extends State {
     public static float musicPos;
     public static int latestBlockX;
     public static int latestBlockWidth;
+    public static int latestBlockHeight;
     public static int latestBlockY;
     public static ArrayList<Layer> layers;
     public static ArrayList<Block> blocks;
@@ -87,10 +88,10 @@ public class GameState extends State {
         for (int i = 0; i < 7; i++) {
             layers.add(new Layer(new Image("data/sprites/layers/layer" + i + ".png"), i)); // adding layers to the background.
         }
-        player = new Player(startX, startY - Animations.startHeight + Block.TILEHEIGHT + 1);
+        player = new Player(startX, startY - Animations.STARTHEIGHT + Block.TILEHEIGHT + 1);
         camera = new Camera();
         gui = new Gui();
-        gametime = 0;
+        gameTime = 0;
         frames = 0;
         translatedX = 0;
         translatedY = 0;
@@ -106,7 +107,7 @@ public class GameState extends State {
     public static void testInit(){
         latestBlockX = (int) startX - 40;
         latestBlockY = (int) startY;
-        gametime = 0;
+        gameTime = 0;
         frames = 0;
         translatedX = 0;
         translatedY = 0;
@@ -125,22 +126,22 @@ public class GameState extends State {
         blocks.stream().forEach(block -> {
             block.render();
         });
-        gui.render();
         player.render();
+        gui.render();
     }
 
     @Override
     public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException { // the main update loop for the game. From here all the game logic is updated.
-        input = gc.getInput(); // gets the current input from the game container.
-        gametime += delta; // updates the played time. played time is stored as milliseconds.
-        frames++; // updates the current frame.
-        deltaRatio = ((float) (delta)) / (gametime / frames); // I devide the total gametime with the number of frames because that is the average time between frames in miliseconds.
+        input = gc.getInput(); // gets the currentAnimation input from the game container.
+        gameTime += delta; // updates the played time. played time is stored as milliseconds.
+        frames++; // updates the currentAnimation frame.
+        deltaRatio = ((float) (delta)) / (gameTime / frames); // I devide the total gameTime with the number of frames because that is the average time between frames in miliseconds.
         //System.out.println("delta Ratio: " + deltaRatio);
         layers.stream().forEach((layer) -> { // for each layer in the layers array.
             layer.update(deltaRatio); // Update the layer. The delta variable is the time in milliseconds between frames, it can be used to keep track of time and update positions properly.
         });
         if (latestBlockX + latestBlockWidth < translatedX + Medrun.width) { // if the latest block's right side is in the picture, we generate a new block.
-            latestBlockX += latestBlockWidth + random.nextInt((int) (1 + dTranslatedX * 30)) + 200; //differates between 200 and 30 times the current speed the game is moving with
+            latestBlockX += latestBlockWidth + random.nextInt((int) (1 + dTranslatedX * 30)) + 200; //differates between 200 and 30 times the currentAnimation speed the game is moving with
             if (latestBlockY < lowestPoint && player.getX() < 10000) { // if the player hasn't gottent to 10000 in the x-axis yet and the last block was over the 500 limit.
                 latestBlockY += (random.nextInt((int) (80 + getBlockVaryingHeight())) - random.nextInt((int) (80 + getBlockVaryingHeight()))); // differates between +- the maximum jump height depending on how far the player has gotten.
             } else if (player.getX() < 10000) {
@@ -154,6 +155,7 @@ public class GameState extends State {
             blocks.add(new Block(randBlockType, latestBlockX, latestBlockY));
             //System.out.println("(added) number of active blocks is now: " + blocks.size());
             latestBlockWidth = blocks.get(blocks.size() - 1).getWidth(); // gets the width of the last block in the blocks array and stores it.
+            latestBlockHeight = blocks.get(blocks.size() - 1).getHeight(); // gets the width of the last block in the blocks array and stores it.
         }
         for (int i = 0; i < blocks.size(); i++) { // checks all the curent active blocks.
             if (blocks.get(i).x + blocks.get(i).getWidth() < translatedX) { // if this block is not visible.
@@ -166,20 +168,39 @@ public class GameState extends State {
         translatedX += dTranslatedX * deltaRatio; // changes the translate varable in the x-axis, this is used to "move" the camera.
         translatedY += dTranslatedY * deltaRatio; // changes the translate varable in the x-axis, this is used to "move" the camera.
         player.update(delta, deltaRatio, input); // updates the player object. 
-        camera.update(gametime, deltaRatio, player); // updates the camera object.
+        camera.update(gameTime, deltaRatio, player); // updates the camera object.
         gui.update(player.xSpeed); // updates the gui object.
         //System.out.println("player X: " + player.getX() + "   player Y: " + player.getY() + "   player Xspeed: " + player.getxSpeed()+ "   player Yspeed:  " + player.getySpeed());
-
-        if (input.isKeyPressed(Input.KEY_ESCAPE)) { // if the player pressed the ecape key in the last frame.
-            gc.getGraphics().copyArea(PauseState.pauseFrame, 0, 0); // screenshots the current visible screent and sends it to the pauseFrame image object in the pauseState.
+        if(!MusicPlayer.music.playing()){
+            MusicPlayer.restart();
+            MusicPlayer.play();
+        }
+        
+        
+        if(player.getY() > latestBlockY + latestBlockHeight){ // if the player is below the last block
+            player.die(new float[]{player.getX(), player.getY()}, false);
+        }
+        
+        if (input.isKeyPressed(Input.KEY_ESCAPE) && !player.dead) { // if the player pressed the ecape key in the last frame.
+            gc.getGraphics().copyArea(PauseState.pauseFrame, 0, 0); // screenshots the currentAnimation visible screent and sends it to the pauseFrame image object in the pauseState.
             sbg.enterState(Medrun.PAUSE); // Enter the pause state.
+        } 
+        
+        if(gui.gameOver){
+            if(input.isKeyDown(Input.KEY_ESCAPE)){
+                sbg.enterState(Medrun.MENU);
+            } 
+            if(input.isKeyPressed(Input.KEY_R)){
+                restarted = true;
+                sbg.getCurrentState().init(gc, sbg);
+            }
         }
     }
 
     /**
      * calculates the maximum height that the next block can have based on the
-     * the last blocks position on the y-axis, the players maximum jump height,
-     * and the players current position on the x-axis. The further the player
+ the last blocks position on the y-axis, the players maximum jump height,
+ and the players currentAnimation position on the x-axis. The further the player
      * has gotten the higher the block can position it self.
      *
      * @return A float representing the maximum height the next block can take
@@ -248,7 +269,7 @@ public class GameState extends State {
     }
 
     /**
-     * @return returns the array containing the current active blocks.
+     * @return returns the array containing the currentAnimation active blocks.
      */
     public static ArrayList<Block> getActiveBlocks() {
         return blocks;

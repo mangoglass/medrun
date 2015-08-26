@@ -26,7 +26,7 @@ public class MenuState extends State {
     Image background;
     Image title;
     boolean mouseCheck;
-    static final float fontSize = 150;
+    final float fontSize = 150;
     float gameMusicTime;
     public static final String menuMusicRef = "data/music/menumusic.aif";
 
@@ -94,17 +94,17 @@ public class MenuState extends State {
             mouseCheck = true;
             for (Button button : buttons) {
                 if (button.isInButton(input.getMouseX(), input.getMouseY())) {
-                    if (!button.isClick()) {
+                    if (!button.isClicked()) {
                         button.togglePress();
                     }
-                } else if (button.isClick()) {
+                } else if (button.isClicked()) {
                     button.togglePress();
                 }
             }
         } else if (mouseCheck) { // If the mouse have been clicked but we haven't checked whats been clicked yet.
             mouseCheck = false;
             for (Button button : buttons) {
-                if (button.isClick()) {
+                if (button.isClicked()) {
                     button.togglePress();
                     switch (button.getTitle()) {
                         case "Continue":
@@ -129,6 +129,7 @@ public class MenuState extends State {
                             gc.exit();
                             break;
                         default:
+                            System.out.println("Error in MenuState, entered button check, but no button is clicked.");
                             gc.exit();
                     }
                 }

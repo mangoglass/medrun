@@ -13,8 +13,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 
 /**
- * The Button object is an object that is used to render click-able buttons that
- * is used in the menus of the game.
+ * The Button object is an object that is used to render clicked-able buttons that
+ is used in the menus of the game.
  *
  * @author Tom Axblad
  */
@@ -26,10 +26,10 @@ public class Button implements Renderable {
     String title;
     Font font;
     TrueTypeFont buttonFont;
-    Image unclicked;
-    Image clicked;
-    Image image;
-    boolean click;
+    Image unclickedImage;
+    Image clickedImage;
+    Image CurrentImage;
+    boolean clicked;
     float x;
     float y;
     float width;
@@ -43,17 +43,17 @@ public class Button implements Renderable {
      * @throws SlickException
      */
     public Button(String title) throws SlickException {
-        click = false;
+        clicked = false;
         this.title = title;
         this.x = Medrun.getWidth() / 2 - this.width / 2;
         this.y = 0;
-        unclicked = new Image("data/sprites/button.png");
-        clicked = new Image("data/sprites/buttonclicked.png");
-        unclicked.setFilter(Image.FILTER_NEAREST);
-        clicked.setFilter(Image.FILTER_NEAREST);
-        width = unclicked.getWidth() * scale;
-        height = unclicked.getHeight() * scale;
-        image = unclicked;
+        unclickedImage = new Image("data/sprites/button.png");
+        clickedImage = new Image("data/sprites/buttonclicked.png");
+        unclickedImage.setFilter(Image.FILTER_NEAREST);
+        clickedImage.setFilter(Image.FILTER_NEAREST);
+        width = unclickedImage.getWidth() * scale;
+        height = unclickedImage.getHeight() * scale;
+        CurrentImage = unclickedImage;
         try {
             font = Font.createFont(Font.TRUETYPE_FONT, new File("data/fonts/retro.ttf"));
             font = font.deriveFont(fontSize);
@@ -68,17 +68,19 @@ public class Button implements Renderable {
      * text that will be rendered in the button.
      *
      * @param title the string representation for the text.
+     * @param x
+     * @param y
      * @param test separates the two constructors.
      * @throws SlickException
      */
     public Button(String title, int x, int y, boolean test) throws SlickException {
-        click = false;
+        clicked = false;
         this.title = title;
-        unclicked = null;
-        clicked = null;
+        unclickedImage = null;
+        clickedImage = null;
         width = 100;
         height = 100;
-        image = null;
+        CurrentImage = null;
         this.x = x;
         this.y = y;
     }
@@ -93,34 +95,34 @@ public class Button implements Renderable {
      * @throws SlickException
      */
     public Button(String title, int x, int y) throws SlickException {
-        click = false;
+        clicked = false;
         this.title = title;
         this.x = x;
         this.y = y;
-        image = new Image("data/sprites/button.png");
+        CurrentImage = new Image("data/sprites/button.png");
         font = new Font("Chicago", Font.PLAIN, 40);
         buttonFont = new TrueTypeFont(font, false);
     }
 
     /**
-     * Changes the image from clicked to un-clicked or the other way.
+     * Changes the CurrentImage from clickedImage to un-clickedImage or the other way.
      */
     public void togglePress() {
-        if (!click) {
-            click = true;
-            image = clicked;
+        if (!clicked) {
+            clicked = true;
+            CurrentImage = clickedImage;
         } else {
-            click = false;
-            image = unclicked;
+            clicked = false;
+            CurrentImage = unclickedImage;
         }
     }
 
     /**
-     * Returns the image that is displaying right now.
-     * @return the image to output.
+     * Returns the CurrentImage that is displaying right now.
+     * @return the CurrentImage to output.
      */
-    public Image getAnimation() {
-        return image;
+    public Image getCurrentImage() {
+        return CurrentImage;
     }
 
     /**
@@ -128,7 +130,7 @@ public class Button implements Renderable {
      */
     @Override
     public void render() {
-        Medrun.renderScaledCenter(image, (int) x, (int) y, scale);
+        Medrun.renderScaledCenter(CurrentImage, (int) x, (int) y, scale);
         Medrun.renderCenterdText(buttonFont, title, (int) x, (int) y, new Color(Color.black));
     }
 
@@ -234,18 +236,18 @@ public class Button implements Renderable {
     }
     
     /**
-     * Returns true if the button is currently in the "clicked" state.
-     * @return returns the boolean representing the clicked state called "click"
+     * Returns true if the button is currently in the "clickedImage" state.
+     * @return returns the boolean representing the clickedImage state called "clicked"
      */
-    public boolean isClick() {
-        return click;
+    public boolean isClicked() {
+        return clicked;
     }
     /**
-     * sets the click boolean to the input boolean.
-     * @param click the boolean to set the click variable to.
+     * sets the clicked boolean to the input boolean.
+     * @param click the boolean to set the clicked variable to.
      */
-    public void setClick(boolean click) {
-        this.click = click;
+    public void setClicked(boolean click) {
+        this.clicked = click;
     }
 
 }

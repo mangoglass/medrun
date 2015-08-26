@@ -25,9 +25,7 @@ public class Camera {
     float yTarget;
     float xDiff;
     float yDiff;
-
-    boolean caughtUp;
-
+    
     public static boolean started;
 
     /**
@@ -57,7 +55,7 @@ public class Camera {
 
         if (gameTime > 2000 && !started) {
             started = true;
-            player.animations.current = player.animations.getAnimations()[Animations.RUN];
+            player.animations.currentAnimation = player.animations.getAnimations()[Animations.RUN];
         }
 
         if (started && !player.dead) {
@@ -76,12 +74,12 @@ public class Camera {
             GameState.dTranslatedX = ((gameTime / (15000 / Medrun.difficulty)) + xAcc) / GameState.timeFlow;
             GameState.dTranslatedY = yAcc / GameState.timeFlow;
         } else if (player.dead) {
-            if (GameState.dTranslatedX > 0.001 || GameState.dTranslatedX < -0.001) {
+            if (GameState.dTranslatedX > 0.1 || GameState.dTranslatedX < -0.1) {
                 GameState.dTranslatedX /= 1.05;
             } else {
                 GameState.dTranslatedX = 0;
             }
-            if (GameState.dTranslatedY > 0.001 || GameState.dTranslatedY < -0.001) {
+            if (GameState.dTranslatedY > 0.1 || GameState.dTranslatedY < -0.1) {
                 GameState.dTranslatedY /= 1.05;
             } else {
                 GameState.dTranslatedY = 0;

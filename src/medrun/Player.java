@@ -152,9 +152,9 @@ public class Player implements Renderable {
                 backwards = false;
             } else {
                 if (onGround && !sliding) {
-                    speedDif = GameState.dTranslatedX / SPEEDDIVIATOR; // Changes the speedDif variable to the current moving speed divided by the speedDiviator.
+                    speedDif = GameState.dTranslatedX / SPEEDDIVIATOR; // Changes the speedDif variable to the currentAnimation moving speed divided by the speedDiviator.
                 } else { // if the player is sliding or is in the air.
-                    speedDif = GameState.dTranslatedX / (SPEEDDIVIATOR + 1.5f); // Changes the speedDif variable to the current moving speed divided by (speedDiviator + 1.5).
+                    speedDif = GameState.dTranslatedX / (SPEEDDIVIATOR + 1.5f); // Changes the speedDif variable to the currentAnimation moving speed divided by (speedDiviator + 1.5).
                 }
             }
         } else if (input.isKeyDown(Input.KEY_A) && !input.isKeyDown(Input.KEY_D) && controlable && x > GameState.translatedX + SCREENMARGIN) {
@@ -163,9 +163,9 @@ public class Player implements Renderable {
                 forwards = false;
             } else {
                 if (onGround && !sliding) {
-                    speedDif = -GameState.dTranslatedX / SPEEDDIVIATOR; // Changes the speedDif variable to the negative current moving speed divided by the speedDiviator.
+                    speedDif = -GameState.dTranslatedX / SPEEDDIVIATOR; // Changes the speedDif variable to the negative currentAnimation moving speed divided by the speedDiviator.
                 } else {
-                    speedDif = -GameState.dTranslatedX / (SPEEDDIVIATOR + 1.5f); // Changes the speedDif variable to the negative current moving speed divided by (speedDiviator + 1.5).
+                    speedDif = -GameState.dTranslatedX / (SPEEDDIVIATOR + 1.5f); // Changes the speedDif variable to the negative currentAnimation moving speed divided by (speedDiviator + 1.5).
                 }
             }
         } else if (forwards || backwards) {
@@ -292,7 +292,7 @@ public class Player implements Renderable {
                 partialVector[X] += smallVector[X];
                 partialVector[Y] += smallVector[Y];
 
-                if (vector[X] == 0) { // stops an infinite loop caused by the character not moving and the game trying recheck the current position.
+                if (vector[X] == 0) { // stops an infinite loop caused by the character not moving and the game trying recheck the currentAnimation position.
                     break;
                 }
             }
@@ -309,15 +309,15 @@ public class Player implements Renderable {
     }
 
     /**
-     * Renders the current player animation on the right x and y values.
+     * Renders the currentAnimation player animation on the right x and y values.
      */
     @Override
     public void render() {
         animations.draw(x, y);
     }
-
+    
     /**
-     * Kills the player and changes the players current position.
+     * Kills the player and changes the players currentAnimation position.
      *
      * @param pos The position to change to.
      * @param onGround A boolean that decides if the player should doe on the
@@ -340,7 +340,7 @@ public class Player implements Renderable {
 
     /**
      * Sets the player on ground. Changes the onGround variable to true and sets
-     * the current ySpeed to 0.
+ the currentAnimation ySpeed to 0.
      */
     public void setOnGround() {
         onGround = true;
@@ -350,7 +350,7 @@ public class Player implements Renderable {
 
     /**
      * Sets the player on ground depending on the input arguments. Changes the
-     * onGround variable to true and sets the current ySpeed to 0.
+ onGround variable to true and sets the currentAnimation ySpeed to 0.
      *
      * @param pos The player position to use to find the right position.
      * @param block The block used to get the right position from.
@@ -447,8 +447,8 @@ public class Player implements Renderable {
     }
 
     /**
-     * @return Returns the players xSpeed variable. Which is the current change
-     * in the x-axis for the player each update.
+     * @return Returns the players xSpeed variable. Which is the currentAnimation change
+ in the x-axis for the player each update.
      */
     public float getxSpeed() {
         return xSpeed;
@@ -462,8 +462,8 @@ public class Player implements Renderable {
     }
 
     /**
-     * @return Returns the players ySpeed variable. Which is the current change
-     * in the y-axis for the player each update.
+     * @return Returns the players ySpeed variable. Which is the currentAnimation change
+ in the y-axis for the player each update.
      */
     public float getySpeed() {
         return ySpeed;

@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 
 /**
@@ -31,16 +33,21 @@ public class Gui implements Renderable {
     float y;
     float score;
     float length;
+    boolean gameOver;
     int width;
     int height;
     Font font;
     TrueTypeFont trueType;
+    Image gameOverImg;
 
-    public Gui() {
+    public Gui() throws SlickException {
+        gameOverImg = new Image("data/sprites/gameOver.png");
+        gameOverImg.setFilter(Image.FILTER_NEAREST);
         width = Medrun.width;
         height = Medrun.height;
         score = 0;
         length = 0;
+        gameOver = false;
         try {
             font = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, new File("data/fonts/retro.ttf"));
             font = font.deriveFont((float) fontSize);
@@ -55,6 +62,7 @@ public class Gui implements Renderable {
         height = Medrun.height;
         score = 0;
         length = 0;
+        gameOver = false;
     }
 
     /**
@@ -68,8 +76,11 @@ public class Gui implements Renderable {
     public void update(float distance) {
         x = GameState.translatedX;
         y = GameState.translatedY;
-        score += distance / 10;
+        score += (distance / 10)*Medrun.difficulty;
         length += distance / (Block.TILEWIDTH * 2);
+        if(!gameOver && GameState.player.dead && GameState.dTranslatedX == 0 && GameState.dTranslatedY == 0){
+            gameOver = true;
+        }
     }
 
     /**
@@ -79,8 +90,16 @@ public class Gui implements Renderable {
      */
     @Override
     public void render() {
-        trueType.drawString(x + width - scoreWidth - xMargin, y + yMargin, "Score   " + scoreNumber(), Color.white);
-        trueType.drawString(x + xMargin, y + yMargin, "Distance   " + length(), Color.white);
+        if(!gameOver){
+            trueType.drawString(x + width - scoreWidth - xMargin, y + yMargin, "Score   " + scoreNumber(), Color.white);
+            trueType.drawString(x + xMargin, y + yMargin, "Distance   " + length(), Color.white);
+        } else{
+            Medrun.renderScaledCenter(gameOverImg, (int)x + Medrun.width / 2 , (int)y + Medrun.height/2 - 200, 3);
+            Medrun.renderCenterdText(trueType, "Score   " + scoreNumber(), (int)x + Medrun.width/3, (int)y + (Medrun.height/2) + 100, Color.white);
+            Medrun.renderCenterdText(trueType, "Distance   " + length(), (int)x + 2 * Medrun.width/3, (int)y + (Medrun.height/2) + 100, Color.white);
+            Medrun.renderCenterdText(trueType, "ESC - Main Menu", (int)x + Medrun.width/3, (int)y + (Medrun.height/2) + 300, Color.white);
+            Medrun.renderCenterdText(trueType, "R - Restart", (int)x + 2 * Medrun.width/3, (int)y + (Medrun.height/2) + 300, Color.white);
+        }
     }
 
     /**

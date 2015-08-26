@@ -34,6 +34,8 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 public class Medrun extends StateBasedGame {
 
+    private static final String settingsRef = "data/settings.ini";
+    
     public static final int width = 1920; // the games "width" rendering something at 1920 in the x-axis will put it to the farthest right.
     public static final int height = 1080; // the games "height" rendering something at 1080 in the y-axis will put it to the lowest bottom.
 
@@ -46,6 +48,7 @@ public class Medrun extends StateBasedGame {
     public static final int LEADERBOARDS = 4;
     public static final int SETTINGS = 5;
     public static final int ACHIEVEMENTS = 6;
+    
     public static Medrun game;
     public static boolean fullScreen;
     public static boolean vSync;
@@ -62,6 +65,7 @@ public class Medrun extends StateBasedGame {
     public static int soundEffects;
     public static int soundMusic;
     public static MusicPlayer music;
+    public static SettingsHandler settings;
 
     /**
      *
@@ -84,11 +88,26 @@ public class Medrun extends StateBasedGame {
         Dimension display = Toolkit.getDefaultToolkit().getScreenSize(); //skapar ett display objekt där skärmens upplösning kan hämtas.   
         displayWidth = (int) display.getWidth();
         displayHeight = (int) display.getHeight();
-        try {
+        settings = new SettingsHandler(settingsRef);
+        
+        fullScreen = settings.readBolSetting("bFullScreen");
+        vSync = settings.readBolSetting("bVSync");
+        displayFPS = settings.readBolSetting("bDisplayFps");
+        soundMuted = settings.readBolSetting("bSMute");
+        gameWidth = settings.readIntSetting("iWidth");
+        gameHeight = settings.readIntSetting("iHeight");
+        targetFramerate = settings.readIntSetting("iTargetFramerate");
+        minUpdateTime = settings.readIntSetting("iMinimumLogicUpdateInterval");
+        difficulty = settings.readIntSetting("iDifficulty");
+        soundMaster = settings.readIntSetting("iSMaster");
+        soundEffects = settings.readIntSetting("iSEffects");
+        soundMusic = settings.readIntSetting("iSMusic");
+        
+        /*try {
             readSettings();
         } catch (FileNotFoundException e) {
             writeSettings();
-        }
+        }*/
     }
 
     /**
@@ -115,6 +134,7 @@ public class Medrun extends StateBasedGame {
             System.out.println("\nERROR\nerror in settings.ini\niWidth and/or iHeight holds invalid values, only resolutions compatible with your screen is allowed.\n");
             app.setDisplayMode(displayWidth / 2, displayHeight / 2, false);
         }
+        
         app.setShowFPS(displayFPS);
         app.setTargetFrameRate(targetFramerate);
         app.setVSync(vSync);
@@ -149,7 +169,7 @@ public class Medrun extends StateBasedGame {
      *
      * @throws java.io.IOException
      */
-    public static void readSettings() throws IOException {
+    /*public static void readSettings() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("data/settings.ini"));
         String line = reader.readLine();
         while (line != null) {
@@ -280,7 +300,7 @@ public class Medrun extends StateBasedGame {
         soundEffects = 100;
         soundMusic = 100;
 
-    }
+    }*/
 
     /**
      * Returns true if the game is in full-screen.
