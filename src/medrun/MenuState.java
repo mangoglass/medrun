@@ -44,7 +44,7 @@ public class MenuState extends State {
                 }
                 MusicPlayer.changeMusic(menuMusicRef);
             }
-            Medrun.music.play();
+            MusicPlayer.play();
         }
         if (Camera.started && !GameState.player.dead) {
             buttons[4].setTitle("Continue");

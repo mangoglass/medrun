@@ -6,7 +6,9 @@
 package medrun;
 
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.io.File;
+import java.io.IOException;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -57,10 +59,9 @@ public class Button implements Renderable {
         try {
             font = Font.createFont(Font.TRUETYPE_FONT, new File("data/fonts/retro.ttf"));
             font = font.deriveFont(fontSize);
-            //System.out.println(font.getSize());
-            //font = new Font("Chicago", Font.BOLD, 25 * (int) scale);
             buttonFont = new TrueTypeFont(font, false);
-        } catch (Exception e) {
+        } catch (FontFormatException | IOException e) {
+            System.out.println(e.toString());
         }
     }
     /**
@@ -99,9 +100,20 @@ public class Button implements Renderable {
         this.title = title;
         this.x = x;
         this.y = y;
-        CurrentImage = new Image("data/sprites/button.png");
-        font = new Font("Chicago", Font.PLAIN, 40);
-        buttonFont = new TrueTypeFont(font, false);
+        unclickedImage = new Image("data/sprites/button.png");
+        clickedImage = new Image("data/sprites/buttonclicked.png");
+        unclickedImage.setFilter(Image.FILTER_NEAREST);
+        clickedImage.setFilter(Image.FILTER_NEAREST);
+        width = unclickedImage.getWidth() * scale;
+        height = unclickedImage.getHeight() * scale;
+        CurrentImage = unclickedImage;
+        try {
+            font = Font.createFont(Font.TRUETYPE_FONT, new File("data/fonts/retro.ttf"));
+            font = font.deriveFont(fontSize);
+            buttonFont = new TrueTypeFont(font, false);
+        } catch (FontFormatException | IOException e) {
+            System.out.println(e.toString());
+        }
     }
 
     /**

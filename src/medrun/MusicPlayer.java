@@ -60,7 +60,9 @@ public class MusicPlayer {
      * PLays the music from the music object
      */
     public static void play() {
-        music.play();
+        if(!music.playing()){
+            music.play();
+        }
     }
 
     /**

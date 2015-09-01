@@ -7,15 +7,8 @@ package medrun;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.Color;
@@ -36,8 +29,8 @@ public class Medrun extends StateBasedGame {
 
     private static final String settingsRef = "data/settings.ini";
     
-    public static final int width = 1920; // the games "width" rendering something at 1920 in the x-axis will put it to the farthest right.
-    public static final int height = 1080; // the games "height" rendering something at 1080 in the y-axis will put it to the lowest bottom.
+    public static final int width = 1920; // the games "width". Rendering something at 1920 in the x-axis will put it to the farthest right.
+    public static final int height = 1080; // the games "height". Rendering something at 1080 in the y-axis will put it to the lowest bottom.
 
     public static AppGameContainer app; // app = application
     public static AppGameContainer scalable; // to be able to scale the window.
@@ -102,12 +95,6 @@ public class Medrun extends StateBasedGame {
         soundMaster = settings.readIntSetting("iSMaster");
         soundEffects = settings.readIntSetting("iSEffects");
         soundMusic = settings.readIntSetting("iSMusic");
-        
-        /*try {
-            readSettings();
-        } catch (FileNotFoundException e) {
-            writeSettings();
-        }*/
     }
 
     /**
@@ -161,146 +148,6 @@ public class Medrun extends StateBasedGame {
         this.getState(SETTINGS).init(gc, this);
         this.getState(ACHIEVEMENTS).init(gc, this);
     }
-
-    /**
-     * The settings.ini file will be read using this function. All the
-     * parameters will then be loaded into variables in this class and will be
-     * used throughout the game.
-     *
-     * @throws java.io.IOException
-     */
-    /*public static void readSettings() throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("data/settings.ini"));
-        String line = reader.readLine();
-        while (line != null) {
-            if (line.startsWith("bFullScreen")) {
-                switch (line.substring(line.indexOf("=") + 1).toLowerCase().trim()) {
-                    case "true":
-                        fullScreen = true;
-                        break;
-                    case "false":
-                        fullScreen = false;
-                        break;
-                    default:
-                        System.out.println("error in settings.ini\nbFullscreen holds invalid value, only \"true\" or \"false\" is allowed.");
-                        fullScreen = false;
-                        break;
-                }
-            } else if (line.startsWith("bVSync")) {
-                switch (line.substring(line.indexOf("=") + 1).toLowerCase().trim()) {
-                    case "true":
-                        vSync = true;
-                        break;
-                    case "false":
-                        vSync = false;
-                        break;
-                    default:
-                        System.out.println("error in settings.ini\nbVSync holds invalid value, only \"true\" or \"false\" is allowed.");
-                        vSync = true;
-                        break;
-                }
-            } else if (line.startsWith("bDisplayFps")) {
-                switch (line.substring(line.indexOf("=") + 1).toLowerCase().trim()) {
-                    case "true":
-                        displayFPS = true;
-                        break;
-                    case "false":
-                        displayFPS = false;
-                        break;
-                    default:
-                        System.out.println("error in settings.ini\nbDisplayFps holds invalid value, only \"true\" or \"false\" is allowed.");
-                        displayFPS = false;
-                        break;
-                }
-            } else if (line.startsWith("iWidth")) {
-                gameWidth = Integer.parseInt(line.substring(line.indexOf("=") + 1).toLowerCase().trim());
-            } else if (line.startsWith("iHeight")) {
-                gameHeight = Integer.parseInt(line.substring(line.indexOf("=") + 1).toLowerCase().trim());
-            } else if (line.startsWith("iTargetFramerate")) {
-                targetFramerate = Integer.parseInt(line.substring(line.indexOf("=") + 1).toLowerCase().trim());
-            } else if (line.startsWith("iMinimumLogicUpdateInterval")) {
-                minUpdateTime = Integer.parseInt(line.substring(line.indexOf("=") + 1).toLowerCase().trim());
-            } else if (line.startsWith("iDifficulty")) {
-                difficulty = 1 + ((Integer.parseInt(line.substring(line.indexOf("=") + 1).toLowerCase().trim())) - 1) / 2; // a 1 represents 1, a 2 represents 1.5, a 3 is 2, and so on.  
-            } else if (line.startsWith("bSMute")) {
-                switch (line.substring(line.indexOf("=") + 1).toLowerCase().trim()) {
-                    case "true":
-                        soundMuted = true;
-                        break;
-                    case "false":
-                        soundMuted = false;
-                        break;
-                    default:
-                        System.out.println("error in settings.ini\nbSMute holds invalid value, only \"true\" or \"false\" is allowed.");
-                        soundMuted = false;
-                        break;
-                }
-            } else if (line.startsWith("iSMaster")) {
-                soundMaster = Integer.parseInt(line.substring(line.indexOf("=") + 1).toLowerCase().trim());
-            } else if (line.startsWith("iSEffects")) {
-                soundEffects = Integer.parseInt(line.substring(line.indexOf("=") + 1).toLowerCase().trim());
-            } else if (line.startsWith("iSMusic")) {
-                soundMusic = Integer.parseInt(line.substring(line.indexOf("=") + 1).toLowerCase().trim());
-            }
-            line = reader.readLine();
-        }
-        try {
-            reader.close();
-        } catch (Exception ex) {
-        }
-    }
-
-    public static void writeSettings() {
-
-        File f = new File("data/settings.ini");
-        f.getParentFile().mkdirs();
-        Writer writer = null;
-        try {
-            f.createNewFile();
-            writer = new BufferedWriter(new OutputStreamWriter(
-                    new FileOutputStream(f.getPath()), "utf-8"));
-            writer.write("\n\n# Video Settings:");
-            writer.write("\n");
-            writer.write("bFullScreen = false\n");
-            writer.write("bVSync = true\n");
-            writer.write("bDisplayFps = false\n");
-            writer.write("iWidth = " + displayWidth / 2 + "\n");
-            writer.write("iHeight = " + displayHeight / 2 + "\n");
-            writer.write("iTargetFramerate = 60\n");
-            writer.write("iMinimumLogicUpdateInterval = 10\n");
-            writer.write("\n\n# Game Settings:");
-            writer.write("\n");
-            writer.write("# 1 = easy, 2 = medium, 3 = hard\n");
-            writer.write("iDifficulty = 1");
-            writer.write("\n\n# Sound Settings:");
-            writer.write("\n");
-            writer.write("bSMute = false\n");
-            writer.write("iSMaster = 100\n");
-            writer.write("iSEffects = 100\n");
-            writer.write("iSMusic = 100\n");
-        } catch (IOException i) {
-            System.err.println("Caught IOException: " + i.getMessage());
-        } finally {
-            try {
-                writer.close();
-            } catch (Exception ex) {
-            }
-        }
-
-        fullScreen = false;
-        vSync = true;
-        displayFPS = false;
-        soundMuted = false;
-        gameWidth = displayWidth / 2;
-        gameHeight = displayHeight / 2;
-        targetFramerate = 60;
-        minUpdateTime = 10;
-        difficulty = 1;
-        soundMaster = 100;
-        soundEffects = 100;
-        soundMusic = 100;
-
-    }*/
 
     /**
      * Returns true if the game is in full-screen.
@@ -380,7 +227,7 @@ public class Medrun extends StateBasedGame {
      */
     public static void setGameWidth(int gameWidth) throws SlickException {
         Medrun.gameWidth = gameWidth;
-        app.setDisplayMode(gameWidth, gameHeight, fullScreen);
+        app.setDisplayMode(gameWidth, Medrun.gameHeight, fullScreen);
     }
 
     /**
@@ -399,6 +246,12 @@ public class Medrun extends StateBasedGame {
      */
     public static void setGameHeight(int gameHeight) throws SlickException {
         Medrun.gameHeight = gameHeight;
+        app.setDisplayMode(Medrun.gameWidth, gameHeight, fullScreen);
+    }
+    
+    public static void setGameResolution(int gameWidth, int gameHeight) throws SlickException {
+        Medrun.gameHeight = gameHeight;
+        Medrun.gameWidth = gameWidth;
         app.setDisplayMode(gameWidth, gameHeight, fullScreen);
     }
 
@@ -489,7 +342,7 @@ public class Medrun extends StateBasedGame {
      * @param y the y position to render at.
      */
     public static void renderCenterdText(TrueTypeFont font, String whatChars, int x, int y) {
-        font.drawString(x - 23 - font.getWidth(whatChars) / 2, y - font.getHeight() / 2, whatChars);
+        font.drawString(x - font.getWidth(whatChars) / 2, y - font.getHeight() / 2, whatChars);
     }
 
     /**
